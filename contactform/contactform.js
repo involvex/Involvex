@@ -1,6 +1,5 @@
 jQuery(document).ready(function($) {
   "use strict";
-
   //Contact
   $('form.contactForm').submit(function() {
     var f = $(this).find('.form-group'),
@@ -92,27 +91,73 @@ jQuery(document).ready(function($) {
     else var str = $(this).serialize();
     var action = $(this).attr('action');
     if( ! action ) {
-      action = 'contactform/contactform.php';
-    }
-    $.ajax({
-      type: "POST",
-      url: action,
-      data: str,
-      success: function(msg) {
-        // alert(msg);
-        if (msg == 'OK') {
-          $("#sendmessage").addClass("show");
-          $("#errormessage").removeClass("show");
-          $('.contactForm').find("input, textarea").val("");
-        } else {
-          $("#sendmessage").removeClass("show");
-          $("#errormessage").addClass("show");
-          $('#errormessage').html(msg);
-        }
+      // action = 'contactform/contactform.php';
+     //  $.ajax({
+     //  type: 'POST',
+     //  url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+     //  data: {
+     //    'key': '099593c4b5f4636b5257879e26b61d87-us20',
+     //    'message': {
+     //      'from_email': 'involvex97@gmail.com',
+     //      'to': [
+     //          {
+     //            'email': 'lukaswill97@gmail.com',
+     //            'name': 'RECIPIENT NAME (OPTIONAL)',
+     //            'type': 'to'
+     //          }
+     //        ],
+     //      'autotext': 'true',
+     //      'subject': 'YOUR SUBJECT HERE!',
+     //      'html': 'YOUR EMAIL CONTENT HERE! YOU CAN USE HTML!'
+     //    }
+     //  }
+     // }).done(function(response) {
+     //   console.log(response); // if you're into that sorta thing
+     // });
 
-      }
-    });
+    }
+    // $.ajax({
+    //   type: "POST",
+    //   url: action,
+    //   data: str,
+    //   success: function(msg) {
+    //     // alert(msg);
+    //     if (msg == 'OK') {
+    //       $("#sendmessage").addClass("show");
+    //       $("#errormessage").removeClass("show");
+    //       $('.contactForm').find("input, textarea").val("");
+    //     } else {
+    //       $("#sendmessage").removeClass("show");
+    //       $("#errormessage").addClass("show");
+    //       $('#errormessage').html(msg);
+    //     }
+    //
+    //   }
+    // });
     return false;
   });
-
+//   $('#sendmessagebtn').click(function() {
+//     $.ajax({
+//      type: 'POST',
+//      url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+//      data: {
+//        'key': '099593c4b5f4636b5257879e26b61d87-us20',
+//        'message': {
+//          'from_email': 'involvex97@gmail.com',
+//          'to': [
+//              {
+//                'email': 'lukaswill97@gmail.com',
+//                'name': 'RECIPIENT NAME (OPTIONAL)',
+//                'type': 'to'
+//              }
+//            ],
+//          'autotext': 'true',
+//          'subject': 'YOUR SUBJECT HERE!',
+//          'html': 'YOUR EMAIL CONTENT HERE! YOU CAN USE HTML!'
+//        }
+//      }
+//     }).done(function(response) {
+//       console.log(response); // if you're into that sorta thing
+//     });
+// });
 });

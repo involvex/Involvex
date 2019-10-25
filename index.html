@@ -20,7 +20,12 @@
   <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
   <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
   <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+  <script>
+  function sendMail() {
+alert('test');
+  }
 
+  </script>
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
 
@@ -665,19 +670,24 @@
                     </h5>
                   </div>
                   <div>
-                      <form action="" method="post" role="form" class="contactForm">
+                      <form action="https://postmail.invotes.com/send" method="post" id="email_form" >
+                        <input type="hidden" name="access_token" value="22nc2dq5n4obpxz4slkdw3hq" />
+                        <!-- <input type="hidden" name="success_url" value="#?message=Email+Successfully+Sent%21&isError=0" />
+                        <input type="hidden" name="error_url" value="#?message=Email+could+not+be+sent.&isError=1" /> -->
+                        <input type="hidden" name="success_url" value="https://involvex.github.io/involvex" />
+                        <input type="hidden" name="error_url" value="https://involvex.github.io/involvex" />
                       <div id="sendmessage">Deine Nachricht wurde verschickt!</div>
                       <div id="errormessage"></div>
                       <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <!-- <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Name" data-rule="minlen:4" data-msg="Bitte gib mindestens 4 Zeichen ein" />
                             <div class="validation"></div>
                           </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
+                            <input type="email" class="form-control" name="reply_to" id="email" placeholder="Email" data-rule="email" data-msg="Gib eine gültige Email ein" />
                             <div class="validation"></div>
                           </div>
                         </div>
@@ -689,15 +699,25 @@
                         </div>
                         <div class="col-md-12 mb-3">
                           <div class="form-group">
-                            <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Inhalt der Nachricht" placeholder="Nachricht"></textarea>
+                            <textarea class="form-control" name="text" rows="5" data-rule="required" data-msg="Inhalt der Nachricht" placeholder="Nachricht"></textarea>
                             <div class="validation"></div>
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <button type="submit" class="button button-a button-big button-rouded">Nachricht verschicken</button>
+                          <button type="submit" class="button button-a button-big button-rouded" id="submit_form" >Nachricht verschicken</button>
                         </div>
                       </div>
                     </form>
+                    <script>
+                        var submitButton = document.getElementById("submit_form");
+                        var form = document.getElementById("email_form");
+                        form.addEventListener("submit", function (e) {
+                            setTimeout(function() {
+                                submitButton.value = "Sending...";
+                                submitButton.disabled = true;
+                            }, 1);
+                        });
+                    </script>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -716,15 +736,9 @@
                       <li><span class="ion-email"></span> <a href="mailtO:involvex97@gmail.com">involvex97@gmail.com</a></li>
                     </ul>
                   </div>
-                  <!-- <div class="socials">
-                    <ul>
-                      <li><a href=""><span class="ico-circle"><i class="ion-social-facebook"></i></span></a></li>
-                      <li><a href=""><span class="ico-circle"><i class="ion-social-instagram"></i></span></a></li>
-                      <li><a href=""><span class="ico-circle"><i class="ion-social-twitter"></i></span></a></li>
-                      <li><a href=""><span class="ico-circle"><i class="ion-social-pinterest"></i></span></a></li>
-                    </ul>
-                  </div> -->
                 </div>
+
+
               </div>
             </div>
           </div>
