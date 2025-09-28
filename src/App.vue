@@ -288,6 +288,7 @@ onMounted(() => {
             <div class="welcome-text">
               <p class="greeting">Welcome to Involvex's Terminal Portfolio</p>
               <p class="description">Type <span class="highlight clickable-cmd" onclick="executeClickableCommand('help')">help</span> to see available commands</p>
+              <p class="deployment-info">🚀 Deployed via GitHub Pages</p>
             </div>
           </div>
 
@@ -574,6 +575,13 @@ body {
 .description {
   color: #cccccc;
   font-size: 16px;
+}
+
+.deployment-info {
+  color: #00ff00;
+  font-size: 12px;
+  margin-top: 10px;
+  opacity: 0.8;
 }
 
 .highlight {
