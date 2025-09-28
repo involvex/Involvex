@@ -228,7 +228,7 @@ const navigateHistory = (direction: number) => {
   historyIndex.value = Math.max(0, Math.min(commandHistory.value.length, historyIndex.value + direction))
 
   if (historyIndex.value < commandHistory.value.length) {
-    currentCommand.value = commandHistory.value[historyIndex.value]
+    currentCommand.value = commandHistory.value[historyIndex.value]!
   } else {
     currentCommand.value = ''
   }
