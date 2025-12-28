@@ -1,21 +1,19 @@
 <template>
   <div class="terminal-input-section">
     <div class="terminal-line">
-      <span class="prompt" hidden="true">involvex@portfolio:~$</span>
+      <span class="prompt">involvex@portfolio:~$</span>
       <input
+        ref="commandInputRef"
         v-model="currentCommand"
-        @keydown.enter="executeCommand"
+        @keydown.enter="handleEnterKey"
         @keydown.up="navigateHistory(-1)"
         @keydown.down="navigateHistory(1)"
         class="command-input"
         placeholder="Type a command..."
-        autofocus
+        autocomplete="off"
+        spellcheck="false"
       />
     </div>
-
-    <!-- <div v-if="commandOutput" class="command-output" hidden="true" >
-      <div v-html="commandOutput" ></div>
-    </div> -->
   </div>
 </template>
 
@@ -26,8 +24,10 @@ const currentCommand = ref('')
 const commandHistory = ref<string[]>([])
 const historyIndex = ref(-1)
 const commandOutput = ref('')
+const commandInputRef = ref<HTMLInputElement | null>(null)
+
 const emit = defineEmits<{
-  'show-section': [section: string]
+  'command-submitted': [command: string]
 }>()
 
 const commands = {
@@ -177,35 +177,7 @@ const commands = {
   },
 }
 
-const executeCommand = async () => {
-  const command = currentCommand.value.trim().toLowerCase()
-  const [cmd, ...args] = command.split(' ')
-
-  // Add to history
-  if (command && commandHistory.value[commandHistory.value.length - 1] !== command) {
-    commandHistory.value.push(currentCommand.value)
-  }
-  historyIndex.value = commandHistory.value.length
-
-  // Execute command
-  if (commands[cmd as keyof typeof commands]) {
-    const result = commands[cmd as keyof typeof commands](args.join(' '))
-    if (result) {
-      commandOutput.value = result
-    }
-  } else {
-    commandOutput.value = `<div class="error">Command not found: ${cmd}. Type 'help' for available commands.</div>`
-  }
-
-  currentCommand.value = ''
-
-  // Scroll to bottom
-  await nextTick()
-  const terminal = document.querySelector('.terminal-body')
-  if (terminal) {
-    terminal.scrollTop = terminal.scrollHeight
-  }
-}
+// Removed unused executeCommand function - replaced with handleEnterKey
 
 const navigateHistory = (direction: number) => {
   if (commandHistory.value.length === 0) return
@@ -222,8 +194,33 @@ const navigateHistory = (direction: number) => {
   }
 }
 
+const handleEnterKey = () => {
+  const command = currentCommand.value.trim()
+  if (command) {
+    // Add to history
+    if (commandHistory.value[commandHistory.value.length - 1] !== command) {
+      commandHistory.value.push(command)
+    }
+    historyIndex.value = commandHistory.value.length
+
+    // Emit command-submitted event
+    emit('command-submitted', command)
+
+    // Clear the input
+    currentCommand.value = ''
+  }
+}
+
 const executeNavigationCommand = (command: string) => {
-  emit('show-section', command)
+  emit('command-submitted', command)
+}
+
+const focusInput = () => {
+  nextTick(() => {
+    if (commandInputRef.value) {
+      commandInputRef.value.focus()
+    }
+  })
 }
 
 // Expose function globally for onclick handlers
@@ -231,10 +228,23 @@ const executeNavigationCommand = (command: string) => {
   executeNavigationCommand
 
 onMounted(() => {
+  // Automatically focus the input
+  nextTick(() => {
+    if (commandInputRef.value) {
+      commandInputRef.value.focus()
+    }
+  })
+
   // Show welcome message
   setTimeout(() => {
     commandOutput.value = commands.help()
   }, 1000)
+})
+
+// Expose methods for parent components
+defineExpose({
+  focusInput,
+  commandInputRef,
 })
 </script>
 

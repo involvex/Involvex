@@ -7,7 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import Inspect from 'vite-plugin-inspect'
 
 export default defineConfig({
-  base: '/Involvex/',
+  base: '/',
   server: {
     port: 8098,
     host: '0.0.0.0',

@@ -1,35 +1,38 @@
-/* eslint-disable-file */
 import './assets/main.css'
 
-import { createApp, ref } from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 
-// import * as reactPerfDevtools from 'react-perf-devtool'
+// Initialize the Vue application
+const app = createApp(App)
 
-// assign the observer to the global scope, as the GC will delete it otherwise
-
-const options = {
-  root: document.querySelector('#app') as HTMLElement,
-  rootMargin: '0px',
-  threshold: 1.0,
-  delay: 1000, // Load the extension after 12 sec.
+// Global error handling
+app.config.errorHandler = (error, instance, info) => {
+  console.error('Global error:', error, info)
 }
-const Observer = new window.IntersectionObserver((entries) => {
-  console.log(entries)
-}, options)
-const PerformObserver = new PerformanceObserver((list) => {
-  for (const entry of list.getEntries()) {
-    console.log(entry)
+
+// Development-only performance monitoring
+if (import.meta.env.DEV) {
+  // Performance observer for development
+  const performanceObserver = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+      if (entry.entryType === 'navigation') {
+        console.log(`Page load time: ${entry.duration}ms`)
+      }
+    }
+  })
+
+  try {
+    performanceObserver.observe({ entryTypes: ['navigation', 'measure'] })
+  } catch (error) {
+    console.warn('Performance monitoring not available:', error)
   }
-})
-// console.log(reactPerfDevtools)
-console.log(PerformObserver)
-Observer.observe(document.querySelector('#app') as HTMLElement)
-console.log(Observer)
-new window.PerformanceObserver((list) => {
-  for (const entry of list.getEntries()) {
-    console.log(entry)
-  }
-})
-createApp(App).mount('#app')
-export const currentView = ref('welcome')
+}
+
+// Mount the application
+app.mount('#app')
+
+// Development helper: expose app to window for debugging
+if (import.meta.env.DEV) {
+  ;(window as typeof window & { $app?: typeof app }).$app = app
+}
