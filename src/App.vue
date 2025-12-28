@@ -71,9 +71,9 @@ const commands = {
     <div class="projects-output">
       <h3>Featured Projects</h3>
       <div class="project-item">
-        <strong>BotForge</strong> - AI-powered bot creation platform
-        <br><span class="project-link">🔗 <a href="https://botforge-one.vercel.app" target="_blank">Live Demo</a></span>
-        <br><span class="project-link">📁 <a href="https://github.com/involvex/botforge" target="_blank">GitHub</a></span>
+        <strong>VSCode Statusbar Extension</strong>
+        <br><span class="project-link">🔗 <a href="https://github.com/involvex/vscode-statusbar-quick-actions" target="_blank">Github Repo</a></span>
+        
       </div>
       <div class="project-item">
         <strong>Create Wizard</strong> - Interactive CLI tool for project setup
