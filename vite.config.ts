@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Inspect from 'vite-plugin-inspect'
+const dev = 'dev'
 
 export default defineConfig({
   base: '/',
@@ -22,6 +23,11 @@ export default defineConfig({
       outputDir: '.vite-inspect',
     }),
   ],
+  envPrefix: ['VITE_'],
+  build: {
+    sourcemap: dev ? 'inline' : false,
+  },
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

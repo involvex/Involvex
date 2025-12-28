@@ -1,0 +1,20 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "discordname",
+    "EMAILJS",
+    "Grecaptcha",
+    "grecaptcha",
+    "RECAPTCHA",
+    "VITE",
+    "recaptcha"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "coverage/**",
+    "**/*.js",
+    "**/*.json"
+  ]
+}

@@ -32,7 +32,6 @@
       <!-- Terminal Input Component -->
       <div class="terminal-input-wrapper">
         <TerminalInput
-          ref="terminalInputRef"
           @command-submitted="handleCommandSubmit"
           @show-section="handleSectionChange"
         />
@@ -209,6 +208,26 @@
           <div class="output-section">
             <div class="contact-content">
               <h3 class="section-title">Get In Touch</h3>
+
+              <!-- Form Feedback Messages -->
+              <div v-if="formState.errors.length > 0" class="form-error">
+                <h3>❌ Validation Errors</h3>
+                <ul>
+                  <li v-for="error in formState.errors" :key="error">{{ error }}</li>
+                </ul>
+              </div>
+
+              <div v-if="formState.isSubmitting" class="form-loading">
+                <h3>⏳ Sending Message...</h3>
+                <p>Please wait while your message is being sent.</p>
+                <div class="loading-spinner"></div>
+              </div>
+
+              <div v-if="formState.isSubmitted" class="form-success">
+                <h3>✅ Message Sent Successfully!</h3>
+                <p>Thank you for your message! I'll get back to you within 24 hours.</p>
+              </div>
+
               <div class="contact-form">
                 <form @submit.prevent="submitContact">
                   <div class="form-group">
@@ -217,6 +236,7 @@
                       type="text"
                       id="contact-name"
                       v-model="contactForm.name"
+                      :disabled="formState.isSubmitting"
                       required
                       placeholder="Your name"
                     />
@@ -227,18 +247,19 @@
                       type="email"
                       id="contact-email"
                       v-model="contactForm.email"
+                      :disabled="formState.isSubmitting"
                       required
                       placeholder="your.email@example.com"
                     />
                   </div>
                   <div class="form-group">
-                    <label for="contact-name">Discord:</label>
+                    <label for="discord-name">Discord:</label>
                     <input
                       type="text"
                       id="discord-name"
                       v-model="contactForm.discordname"
-                      required
-                      placeholder="Your Discordname"
+                      :disabled="formState.isSubmitting"
+                      placeholder="Your Discord username (optional)"
                     />
                   </div>
                   <div class="form-group">
@@ -258,13 +279,47 @@
                       id="contact-message"
                       v-model="contactForm.message"
                       rows="4"
+                      :disabled="formState.isSubmitting"
                       required
                       placeholder="Your message... (minimum 10 characters)"
                       maxlength="500"
                     ></textarea>
                   </div>
-                  <button type="submit" class="submit-btn">
-                    <span class="btn-icon">📧</span> Send Message
+
+                  <!-- reCAPTCHA Validation -->
+                  <div class="form-group">
+                    <div class="recaptcha-container">
+                      <div v-if="formState.isRecaptchaLoading" class="recaptcha-loading">
+                        <div class="loading-spinner"></div>
+                        <span>Validating reCAPTCHA...</span>
+                      </div>
+                      <div v-else-if="formState.isRecaptchaValid" class="recaptcha-success">
+                        ✅ reCAPTCHA verified
+                      </div>
+                      <div v-else class="recaptcha-info">
+                        🔒 This form is protected by reCAPTCHA
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="submit-btn"
+                    :disabled="
+                      formState.isSubmitting || formState.isRecaptchaLoading || !isFormValid
+                    "
+                  >
+                    <span class="btn-icon">
+                      {{
+                        formState.isSubmitting ? '📤' : formState.isRecaptchaLoading ? '🔄' : '📧'
+                      }}
+                    </span>
+                    {{
+                      formState.isSubmitting
+                        ? 'Sending...'
+                        : formState.isRecaptchaLoading
+                          ? 'Validating...'
+                          : 'Send Message'
+                    }}
                   </button>
                 </form>
               </div>
@@ -315,6 +370,17 @@
                     <span class="btn-icon">💝</span> Donate
                   </a>
                 </div>
+                <div class="sponsor-card">
+                  <h4>💸 Microsoft Rewards</h4>
+                  <p>Support with Microsoft Rewards</p>
+                  <a
+                    href="https://rewards.bing.com/welcome?rh=14525F68&ref=rafsrchae&form=ML2XE3&OCID=ML2XE3&PUBL=RewardsDO&CREA=ML2XE3"
+                    target="_blank"
+                    class="sponsor-btn"
+                  >
+                    <span class="btn-icon">💸</span> Signup
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -325,8 +391,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import emailjs from '@emailjs/browser'
+import { onMounted, reactive, ref, computed } from 'vue'
 import TerminalInput from './TerminalInput.vue'
+import { getRecaptchaToken, verifyRecaptchaToken, isRecaptchaAvailable } from '../utils/recaptcha'
+
+// EmailJS configuration
+const EMAILJS_SERVICE_ID = 'involvex'
+const EMAILJS_TEMPLATE_ID = 'template'
+const EMAILJS_PUBLIC_KEY = 'hCOUKo1H7J90KW7QC'
 
 const currentView = defineModel<string>('currentView', {
   default: 'welcome',
@@ -346,7 +419,6 @@ const asciiArt = `
 `
 
 // Reactive state
-const terminalInputRef = ref<InstanceType<typeof TerminalInput> | null>(null)
 const commandOutput = ref('')
 const lastCommand = ref('')
 
@@ -516,6 +588,137 @@ const contactForm = reactive({
   discordname: '',
 })
 
+// Form validation and submission state
+const formState = reactive({
+  isSubmitting: false,
+  errors: [] as string[],
+  isSubmitted: false,
+  recaptchaToken: '',
+  isRecaptchaValid: false,
+  isRecaptchaLoading: false,
+})
+
+// Computed property for form validation
+const isFormValid = computed(() => {
+  return (
+    contactForm.name.trim().length > 0 &&
+    contactForm.email.trim().length > 0 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email) &&
+    contactForm.message.trim().length >= 10 &&
+    formState.isRecaptchaValid
+  )
+})
+
+// reCAPTCHA validation function
+const validateRecaptcha = async (): Promise<boolean> => {
+  if (!isRecaptchaAvailable()) {
+    formState.errors.push('reCAPTCHA is not available. Please refresh the page and try again.')
+    return false
+  }
+
+  formState.isRecaptchaLoading = true
+
+  try {
+    const token = await getRecaptchaToken('contact_form')
+    const isValid = await verifyRecaptchaToken(token)
+
+    formState.recaptchaToken = token
+    formState.isRecaptchaValid = isValid
+
+    if (!isValid) {
+      formState.errors.push('reCAPTCHA validation failed. Please try again.')
+    }
+
+    return isValid
+  } catch (error) {
+    console.error('reCAPTCHA validation error:', error)
+    formState.errors.push('reCAPTCHA validation failed. Please try again.')
+    return false
+  } finally {
+    formState.isRecaptchaLoading = false
+  }
+}
+
+// Enhanced contact form submission with EmailJS integration and reCAPTCHA
+const submitContact = async () => {
+  formState.errors = []
+  formState.isSubmitting = true
+  formState.isSubmitted = false
+
+  // Validation
+  if (!contactForm.name.trim()) {
+    formState.errors.push('Name is required')
+  }
+  if (!contactForm.email.trim()) {
+    formState.errors.push('Email is required')
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email)) {
+    formState.errors.push('Please enter a valid email address')
+  }
+  if (!contactForm.message.trim()) {
+    formState.errors.push('Message is required')
+  } else if (contactForm.message.trim().length < 10) {
+    formState.errors.push('Message must be at least 10 characters long')
+  }
+
+  // reCAPTCHA validation
+  const recaptchaValid = await validateRecaptcha()
+  if (!recaptchaValid) {
+    formState.isSubmitting = false
+    return
+  }
+
+  try {
+    // Prepare email template parameters
+    const templateParams = {
+      from_name: contactForm.name,
+      from_email: contactForm.email,
+      discord_name: contactForm.discordname || 'Not provided',
+      message: contactForm.message,
+      to_name: 'Involvex',
+    }
+
+    // Send email using EmailJS
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
+
+    formState.isSubmitting = false
+    formState.isSubmitted = true
+
+    const response = `
+✅ Thank you for your message, ${contactForm.name}!
+
+📧 Contact Details:
+   • Name: ${contactForm.name}
+   • Email: ${contactForm.email}
+   ${contactForm.discordname ? `   • Discord: ${contactForm.discordname}` : ''}
+
+📝 Message Summary:
+${contactForm.message.substring(0, 100)}${contactForm.message.length > 100 ? '...' : ''}
+
+🚀 Your message has been sent successfully!
+I'll get back to you within 24 hours.
+
+Type 'contact' again to send another message.
+`
+
+    console.log('Contact Form', response)
+
+    // Reset form after a delay
+    setTimeout(() => {
+      contactForm.name = ''
+      contactForm.email = ''
+      contactForm.message = ''
+      contactForm.discordname = ''
+      formState.isSubmitted = false
+    }, 3000)
+  } catch (error) {
+    formState.isSubmitting = false
+    console.error('Failed to send email:', error)
+    formState.errors.push(
+      'Failed to send message. Please try again or contact me directly via email.',
+    )
+  }
+}
+
 // Terminal history management
 const addToHistory = (command: string) => {
   const timestamp = new Date().toLocaleTimeString()
@@ -631,34 +834,32 @@ const showCommandOutput = (command: string): string => {
   return output
 }
 
-const submitContact = () => {
-  // Validate form
-  if (!contactForm.name || !contactForm.email || !contactForm.message) {
-    alert('Please fill in all fields')
-    return
-  }
-
-  // Simulate form submission
-  alert(`Thank you ${contactForm.name}! Your message has been sent. I'll get back to you soon.`)
-
-  // Reset form fields
-  contactForm.name = ''
-  contactForm.email = ''
-  contactForm.message = ''
-
-  // Clear command output
-  commandOutput.value = ''
-}
-
 // Lifecycle
 onMounted(() => {
   fetchProjects()
+
+  // Initialize reCAPTCHA validation status
+  if (isRecaptchaAvailable()) {
+    // Perform initial reCAPTCHA validation
+    validateRecaptcha()
+      .then((isValid) => {
+        if (isValid) {
+          console.log('reCAPTCHA validated successfully')
+        } else {
+          console.log('reCAPTCHA validation failed')
+        }
+      })
+      .catch((error) => {
+        console.error('Initial reCAPTCHA validation error:', error)
+      })
+  }
 })
 
 // Expose methods for parent components
 defineExpose({
-  executeCommand,
-  showCommandOutput,
+  executeCommand(command: string) {
+    executeCommand(command)
+  },
 })
 </script>
 
@@ -1030,6 +1231,12 @@ export default {
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
 }
 
+.form-group input:disabled,
+.form-group textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .form-group input::placeholder,
 .form-group textarea::placeholder {
   color: #666;
@@ -1052,9 +1259,20 @@ export default {
   gap: 8px;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submit-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Form Feedback Styles */
@@ -1071,6 +1289,16 @@ export default {
   background: rgba(255, 107, 107, 0.1);
   border: 1px solid rgba(255, 107, 107, 0.3);
   color: #ff6b6b;
+}
+
+.form-error ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+}
+
+.form-error li {
+  margin-bottom: 5px;
 }
 
 .form-loading {
@@ -1119,6 +1347,7 @@ export default {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -1325,6 +1554,15 @@ export default {
   .project-link {
     text-align: center;
   }
+
+  .recaptcha-container {
+    padding: 12px;
+  }
+
+  .recaptcha-loading {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 /* Focus styles for accessibility */
@@ -1347,6 +1585,7 @@ export default {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1417,6 +1656,7 @@ export default {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
