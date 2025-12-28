@@ -3,19 +3,28 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
- import vueDevTools from 'vite-plugin-vue-devtools'
+import vueDevTools from 'vite-plugin-vue-devtools'
+import Inspect from 'vite-plugin-inspect'
 
-// https://vite.dev/config/
 export default defineConfig({
   base: '/Involvex/',
+  server: {
+    port: 8098,
+    host: '0.0.0.0',
+    allowedHosts: ['*'],
+  },
   plugins: [
     vue(),
     vueJsx(),
-     vueDevTools(),
+    vueDevTools(),
+    Inspect({
+      build: true,
+      outputDir: '.vite-inspect',
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })

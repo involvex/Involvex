@@ -1,7 +1,7 @@
 <template>
   <div class="terminal-input-section">
     <div class="terminal-line">
-      <span class="prompt">involvex@portfolio:~$</span>
+      <span class="prompt" hidden="true">involvex@portfolio:~$</span>
       <input
         v-model="currentCommand"
         @keydown.enter="executeCommand"
@@ -13,59 +13,62 @@
       />
     </div>
 
-    <div v-if="commandOutput" class="command-output">
-      <div v-html="commandOutput"></div>
-    </div>
+    <!-- <div v-if="commandOutput" class="command-output" hidden="true" >
+      <div v-html="commandOutput" ></div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, defineEmits } from 'vue'
 
 const currentCommand = ref('')
 const commandHistory = ref<string[]>([])
 const historyIndex = ref(-1)
 const commandOutput = ref('')
+const emit = defineEmits<{
+  'show-section': [section: string]
+}>()
 
 const commands = {
   help: () => `
     <div class="help-output">
       <h3>Available Commands:</h3>
       <div class="command-list">
-        <div class="command-item">
-          <span class="cmd">about</span>
+        <div class="command-item" onclick="window.executeCommand('about')" @click="executeCommand('about')">
+          <span class="cmd clickable" @click="executeCommand('about')">about</span>
           <span class="desc">- Learn about Involvex</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">projects</span>
+        <div class="command-item" onclick="window.executeCommand('projects')">
+          <span class="cmd clickable">projects</span>
           <span class="desc">- View my GitHub projects</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">skills</span>
+        <div class="command-item" onclick="window.executeCommand('skills')">
+          <span class="cmd clickable">skills</span>
           <span class="desc">- See my technical skills</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">contact</span>
+        <div class="command-item" onclick="window.executeCommand('contact')">
+          <span class="cmd clickable">contact</span>
           <span class="desc">- Get in touch with me</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">sponsor</span>
+        <div class="command-item" onclick="window.executeCommand('sponsor')">
+          <span class="cmd clickable">sponsor</span>
           <span class="desc">- Support my work</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">github</span>
+        <div class="command-item" onclick="window.executeCommand('github')">
+          <span class="cmd clickable">github</span>
           <span class="desc">- Open my GitHub profile</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">clear</span>
+        <div class="command-item" onclick="window.executeCommand('clear')">
+          <span class="cmd clickable">clear</span>
           <span class="desc">- Clear the terminal</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">whoami</span>
+        <div class="command-item" onclick="window.executeCommand('whoami')">
+          <span class="cmd clickable">whoami</span>
           <span class="desc">- Display current user</span>
         </div>
-        <div class="command-item">
-          <span class="cmd">date</span>
+        <div class="command-item" onclick="window.executeCommand('date')">
+          <span class="cmd clickable">date</span>
           <span class="desc">- Show current date and time</span>
         </div>
       </div>
@@ -86,11 +89,6 @@ const commands = {
     <div class="projects-output">
       <h3>Featured Projects</h3>
       <div class="project-item">
-        <strong>BotForge</strong> - AI-powered bot creation platform
-        <br><span class="project-link">🔗 <a href="https://botforge-one.vercel.app" target="_blank">Live Demo</a></span>
-        <br><span class="project-link">📁 <a href="https://github.com/involvex/botforge" target="_blank">GitHub</a></span>
-      </div>
-      <div class="project-item">
         <strong>Terminal Portfolio</strong> - This interactive terminal-style portfolio
         <br><span class="project-link">📁 <a href="https://github.com/involvex/involvex" target="_blank">GitHub</a></span>
       </div>
@@ -108,13 +106,13 @@ const commands = {
         <strong>Frontend:</strong> Vue.js, React, TypeScript, CSS/SCSS
       </div>
       <div class="skill-category">
-        <strong>Backend:</strong> Node.js, Python, Go, PostgreSQL
+        <strong>Backend:</strong> Node.js, Python, PostgreSQL
       </div>
       <div class="skill-category">
-        <strong>Tools:</strong> Git, Docker, AWS, CI/CD
+        <strong>Tools:</strong> Git, AWS
       </div>
       <div class="skill-category">
-        <strong>Languages:</strong> JavaScript, TypeScript, Python, Go
+        <strong>Languages:</strong> JavaScript, TypeScript, Python
       </div>
     </div>
   `,
@@ -224,6 +222,14 @@ const navigateHistory = (direction: number) => {
   }
 }
 
+const executeNavigationCommand = (command: string) => {
+  emit('show-section', command)
+}
+
+// Expose function globally for onclick handlers
+;(window as typeof window & { executeCommand?: (command: string) => void }).executeCommand =
+  executeNavigationCommand
+
 onMounted(() => {
   // Show welcome message
   setTimeout(() => {
@@ -301,6 +307,30 @@ export default {
   color: #00ff00;
   font-weight: 600;
   min-width: 80px;
+}
+
+.cmd.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.cmd.clickable:hover {
+  background: rgba(0, 255, 0, 0.2);
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  transform: translateX(2px);
+}
+
+.command-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.command-item:hover {
+  background: rgba(0, 255, 0, 0.05);
+  border-radius: 4px;
+  padding: 2px;
 }
 
 .desc {

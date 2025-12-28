@@ -2,67 +2,78 @@
   <div class="terminal-body">
     <div class="terminal-content">
       <!-- Welcome Message -->
-      <div class="terminal-line">
+      <!-- <div class="terminal-line">
         <span class="prompt">involvex@portfolio:~$</span>
         <span class="command">welcome</span>
-      </div>
+      </div> -->
 
       <div class="output-section">
         <div class="ascii-art">
           <pre class="ascii-text">{{ asciiArt }}</pre>
         </div>
+        <TerminalInput />
 
-        <div class="welcome-text">
+        <!-- <div class="welcome-text">
           <p class="greeting">Welcome to Involvex's Terminal Portfolio</p>
           <p class="description">
             Type <span class="highlight">help</span> to see available commands
           </p>
-        </div>
+        </div> -->
       </div>
 
-      <!-- Navigation Commands -->
-      <div class="terminal-line">
+      <!--       Navigation Commands -->
+      <div class="terminal-line" style="visibility: hidden">
         <span class="prompt">involvex@portfolio:~$</span>
         <span class="command">help</span>
       </div>
 
-      <div class="output-section">
+      <div class="output-section" style="margin-top: -60px">
         <div class="help-commands">
-          <div class="command-item">
-            <span class="cmd">about</span>
-            <span class="desc">- Learn about Involvex</span>
-          </div>
-          <div class="command-item">
-            <span class="cmd">projects</span>
-            <span class="desc">- View my GitHub projects</span>
-          </div>
-          <div class="command-item">
-            <span class="cmd">skills</span>
-            <span class="desc">- See my technical skills</span>
-          </div>
-          <div class="command-item">
-            <span class="cmd">contact</span>
-            <span class="desc">- Get in touch with me</span>
-          </div>
-          <div class="command-item">
-            <span class="cmd">sponsor</span>
-            <span class="desc">- Support my work</span>
-          </div>
-          <div class="command-item">
-            <span class="cmd">clear</span>
+          <a href="#about" class="link nav transition-all hover:fill-transparent w-auto mb-px">
+            <div class="command-item" @click="executeCommand('about')">
+              <span class="cmd clickable">about</span>
+              <span class="desc">- Learn about Involvex</span>
+            </div>
+          </a>
+          <a href="#projects" class="link nav transition-all hover:fill-transparent w-auto mb-px">
+            <div class="command-item" @click="executeCommand('projects')">
+              <span class="cmd clickable">projects</span>
+              <span class="desc">- View my GitHub projects</span>
+            </div>
+          </a>
+          <a href="#skills" class="link nav transition-all hover:fill-transparent w-auto mb-px">
+            <div class="command-item" @click="executeCommand('skills')">
+              <span class="cmd clickable">skills</span>
+              <span class="desc">- See my technical skills</span>
+            </div>
+          </a>
+          <a href="#contact" class="link nav transition-all hover:fill-transparent w-auto mb-px">
+            <div class="command-item" @click="executeCommand('contact')">
+              <span class="cmd clickable">contact</span>
+              <span class="desc">- Get in touch with me</span>
+            </div>
+          </a>
+          <a href="#sponsor" class="link nav transition-all hover:fill-transparent w-auto mb-px">
+            <div class="command-item" @click="executeCommand('sponsor')">
+              <span class="cmd clickable">sponsor</span>
+              <span class="desc">- Support my work</span>
+            </div>
+          </a>
+          <div class="command-item" @click="executeCommand('clear')">
+            <span class="cmd clickable">clear</span>
             <span class="desc">- Clear the terminal</span>
           </div>
         </div>
       </div>
 
-      <!-- About Section -->
-      <div class="terminal-line">
+      <!-- About Section  -->
+      <div class="terminal-line" style="transform-style: flat; visibility: hidden">
         <span class="prompt">involvex@portfolio:~$</span>
         <span class="command">about</span>
       </div>
 
       <div class="output-section">
-        <div class="about-content">
+        <div class="about-content" id="about">
           <h3 class="section-title">About Involvex</h3>
           <div class="about-grid">
             <div class="about-card">
@@ -97,7 +108,7 @@
       </div>
 
       <div class="output-section">
-        <div class="projects-content">
+        <div class="projects-content" id="projects">
           <h3 class="section-title">Featured Projects</h3>
           <div class="projects-grid">
             <div class="project-card" v-for="project in projects" :key="project.name">
@@ -130,7 +141,7 @@
       </div>
 
       <div class="output-section">
-        <div class="skills-content">
+        <div class="skills-content" id="skills">
           <h3 class="section-title">Technical Skills</h3>
           <div class="skills-grid">
             <div class="skill-category" v-for="category in skills" :key="category.name">
@@ -156,10 +167,10 @@
       </div>
 
       <div class="output-section">
-        <div class="contact-content">
+        <div class="contact-content" id="contact">
           <h3 class="section-title">Get In Touch</h3>
           <div class="contact-form">
-            <form @submit.prevent="submitContact">
+            <form id="contactForm" @submit.prevent="submitContact">
               <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" v-model="contactForm.name" required />
@@ -179,7 +190,7 @@
             <a href="https://github.com/involvex" target="_blank" class="contact-link">
               <span class="link-icon">🐙</span> GitHub
             </a>
-            <a href="mailto:contact@involvex.dev" class="contact-link">
+            <a href="mailto:contact@involvex97@gmail.com" class="contact-link">
               <span class="link-icon">📧</span> Email
             </a>
           </div>
@@ -193,7 +204,7 @@
       </div>
 
       <div class="output-section">
-        <div class="sponsor-content">
+        <div class="sponsor-content" id="sponsor">
           <h3 class="section-title">Support My Work</h3>
           <div class="sponsor-grid">
             <div class="sponsor-card">
@@ -222,7 +233,7 @@
       </div>
 
       <!-- Interactive Terminal Input -->
-      <TerminalInput />
+      <!--      <TerminalInput />-->
     </div>
   </div>
 </template>
@@ -230,6 +241,11 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import TerminalInput from './TerminalInput.vue'
+import { useForm } from '@formwerk/core'
+
+const emit = defineEmits<{
+  'show-section': [section: string]
+}>()
 
 const asciiArt = `
     ██╗███╗   ██╗██╗   ██╗ ██████╗ ██╗     ██╗   ██╗███████╗██╗  ██╗
@@ -240,54 +256,135 @@ const asciiArt = `
     ╚═╝╚═╝  ╚═══╝  ╚═══╝   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝
 `
 
-const projects = ref([
-  {
-    name: 'BotForge',
-    description: 'AI-powered bot creation platform with advanced automation capabilities',
-    technologies: ['Vue.js', 'Node.js', 'AI/ML', 'WebSocket'],
-    github: 'https://github.com/involvex/botforge',
-    demo: 'https://botforge-one.vercel.app',
-  },
-  {
-    name: 'Involvex Portfolio',
-    description: 'Terminal-style portfolio showcasing projects and skills',
-    technologies: ['Vue.js', 'TypeScript', 'CSS3', 'Vite'],
-    github: 'https://github.com/involvex/involvex',
-  },
-  {
-    name: 'Open Source Contributions',
-    description: 'Various contributions to open-source projects and community tools',
-    technologies: ['JavaScript', 'Python', 'Go', 'Docker'],
-    github: 'https://github.com/involvex',
-  },
-])
+interface Project {
+  name: string
+  description: string
+  technologies: string[]
+  github: string
+  demo?: string | null
+  stars?: number
+  language?: string | null
+  updated?: string
+}
+
+// GitHub API integration
+const projects = ref<Project[]>([])
+const isLoadingProjects = ref(false)
+const projectsError = ref<string | null>(null)
+
+const fetchProjects = async () => {
+  isLoadingProjects.value = true
+  projectsError.value = null
+
+  try {
+    const response = await fetch(
+      'https://api.github.com/users/involvex/repos?sort=updated&per_page=12',
+    )
+
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`)
+    }
+
+    const repos = await response.json()
+
+    // Filter out forks and sort by stars
+    const filteredRepos = repos
+      .filter((repo: GitHubApiResponse) => !repo.fork)
+      .sort((a: GitHubApiResponse, b: GitHubApiResponse) => b.stargazers_count - a.stargazers_count)
+      .slice(0, 8) // Limit to top 8 projects
+
+    // Transform GitHub API response to our format
+    projects.value = filteredRepos.map(
+      (repo: GitHubApiResponse): Project => ({
+        name: repo.name,
+        description: repo.description || 'No description available',
+        technologies: extractTechnologies(repo),
+        github: repo.html_url,
+        demo: repo.homepage || null,
+        stars: repo.stargazers_count,
+        language: repo.language,
+        updated: new Date(repo.updated_at).toLocaleDateString(),
+      }),
+    )
+  } catch (error) {
+    console.error('Error fetching projects:', error)
+    projectsError.value = 'Failed to fetch projects from GitHub'
+
+    // Fallback to sample projects if API fails
+    projects.value = [
+      {
+        name: 'Involvex Portfolio',
+        description: 'Terminal-style portfolio showcasing projects and skills',
+        technologies: ['Vue.js', 'TypeScript', 'CSS3', 'Vite'],
+        github: 'https://github.com/involvex/involvex',
+      },
+    ]
+  } finally {
+    isLoadingProjects.value = false
+  }
+}
+
+interface GitHubRepo {
+  name: string
+  description: string | null
+  language: string | null
+  fork: boolean
+  stargazers_count: number
+  html_url: string
+  homepage: string | null
+  updated_at: string
+}
+
+interface GitHubApiResponse {
+  name: string
+  description: string | null
+  language: string | null
+  fork: boolean
+  stargazers_count: number
+  html_url: string
+  homepage: string | null
+  updated_at: string
+}
+
+// Extract technologies based on repository characteristics
+const extractTechnologies = (repo: GitHubRepo): string[] => {
+  const tech: string[] = []
+
+  if (repo.language) {
+    tech.push(repo.language)
+  }
+
+  // Add technology hints based on repository name and description
+  const name = repo.name.toLowerCase()
+  const desc = (repo.description || '').toLowerCase()
+
+  if (name.includes('vue') || desc.includes('vue')) tech.push('Vue.js')
+  if (name.includes('react') || desc.includes('react')) tech.push('React')
+  if (name.includes('node') || desc.includes('node')) tech.push('Node.js')
+  if (name.includes('python') || desc.includes('python')) tech.push('Python')
+  if (name.includes('docker')) tech.push('Docker')
+  if (name.includes('ai') || desc.includes('ai')) tech.push('AI/ML')
+  if (name.includes('api')) tech.push('API')
+  if (name.includes('bot')) tech.push('Bot')
+
+  // Remove duplicates and limit
+  return [...new Set(tech)].slice(0, 4)
+}
+
+// Fetch projects on component mount
+fetchProjects()
 
 const skills = ref([
   {
-    name: 'Frontend',
+    name: 'Technical Skills',
     items: [
-      { name: 'Vue.js', level: 95 },
-      { name: 'React', level: 90 },
-      { name: 'TypeScript', level: 88 },
-      { name: 'CSS/SCSS', level: 92 },
-    ],
-  },
-  {
-    name: 'Backend',
-    items: [
-      { name: 'Node.js', level: 90 },
+      { name: 'Vue.js', level: 65 },
+      { name: 'React', level: 70 },
+      { name: 'TypeScript', level: 68 },
+      { name: 'CSS/SCSS', level: 85 },
+      { name: 'Node.js', level: 82 },
       { name: 'Python', level: 85 },
-      { name: 'Go', level: 80 },
-      { name: 'PostgreSQL', level: 88 },
-    ],
-  },
-  {
-    name: 'Tools & DevOps',
-    items: [
-      { name: 'Git', level: 95 },
-      { name: 'Docker', level: 85 },
-      { name: 'AWS', level: 80 },
-      { name: 'CI/CD', level: 85 },
+      { name: 'Git', level: 80 },
     ],
   },
 ])
@@ -300,13 +397,22 @@ const contactForm = reactive({
 
 const submitContact = () => {
   // Handle form submission
-  console.log('Contact form submitted:', contactForm)
+
+  const { handleSubmit } = useForm()
+
+  const onSubmit = handleSubmit((data) => {
+    alert(JSON.stringify(data.toObject(), null, 2))
+  })
   alert("Thank you for your message! I'll get back to you soon.")
 
-  // Reset form
+  // Reset form fields
   contactForm.name = ''
   contactForm.email = ''
   contactForm.message = ''
+}
+
+const executeCommand = (command: string) => {
+  emit('show-section', command)
 }
 </script>
 
@@ -403,6 +509,30 @@ export default {
   color: #00ff00;
   font-weight: 600;
   min-width: 80px;
+}
+
+.cmd.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.cmd.clickable:hover {
+  background: rgba(0, 255, 0, 0.2);
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  transform: translateX(2px);
+}
+
+.command-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.command-item:hover {
+  background: rgba(0, 255, 0, 0.05);
+  border-radius: 4px;
+  padding: 2px;
 }
 
 .desc {

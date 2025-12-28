@@ -24,12 +24,17 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@formwerk/core": "^0.14.4",
+    "@formwerk/devtools": "^0.14.4",
+    "react-perf-devtool": "^3.1.8",
+    "sendmail": "^1.6.1",
     "vue": "^3.5.18"
   },
   "devDependencies": {
     "@prettier/plugin-oxc": "^0.1.3",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^25.0.3",
+    "@types/sendmail": "^1.4.7",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitejs/plugin-vue-jsx": "^5.1.1",
     "@vue/eslint-config-prettier": "^10.2.0",
@@ -44,6 +49,7 @@
     "prettier": "^3.7.4",
     "typescript": "~5.9.2",
     "vite": "npm:rolldown-vite@latest",
+    "vite-plugin-inspect": "^11.3.3",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vue-tsc": "^3.0.4"
   }
