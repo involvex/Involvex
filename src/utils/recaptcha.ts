@@ -22,7 +22,33 @@ interface RecaptchaOptions {
 }
 
 // reCAPTCHA site key - in production, this should come from environment variables
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITEKEY
+const RECAPTCHA_SITE_KEY =
+  import.meta.env.VITE_RECAPTCHA_SITEKEY || '6LecbjksAAAAAJCp4NMbtNEHucXwiyhMjMWpXwhZ'
+
+/**
+ * Load reCAPTCHA script dynamically to avoid CORB issues
+ * @param siteKey - reCAPTCHA site key
+ * @returns Promise<void>
+ */
+function loadRecaptchaScript(siteKey: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Check if script is already loaded
+    if (document.querySelector('script[src*="recaptcha/enterprise.js"]')) {
+      resolve()
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = `https://www.google.com/recaptcha/enterprise.js?render=${siteKey}`
+    script.async = true
+    script.defer = true
+
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Failed to load reCAPTCHA script'))
+
+    document.head.appendChild(script)
+  })
+}
 
 /**
  * Initialize reCAPTCHA and get a token
@@ -31,36 +57,47 @@ const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITEKEY
  */
 export async function getRecaptchaToken(action: string = 'contact_form'): Promise<string> {
   return new Promise((resolve, reject) => {
-    // Wait for grecaptcha to be available
-    const checkGrecaptcha = () => {
-      if (window.grecaptcha && window.grecaptcha.enterprise) {
-        window.grecaptcha.enterprise.ready(async () => {
-          try {
-            const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, {
-              action,
-            })
-            resolve(token)
-          } catch (error) {
-            console.error('reCAPTCHA execution failed:', error)
-            reject(
-              new Error(
-                `reCAPTCHA execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-              ),
-            )
-          }
-        })
-      } else {
-        // Retry after a short delay
-        setTimeout(checkGrecaptcha, 100)
+    try {
+      // Load reCAPTCHA script if not already loaded
+      loadRecaptchaScript(RECAPTCHA_SITE_KEY)
+
+      // Wait for grecaptcha to be available
+      const checkGrecaptcha = () => {
+        if (window.grecaptcha && window.grecaptcha.enterprise) {
+          window.grecaptcha.enterprise.ready(async () => {
+            try {
+              const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, {
+                action,
+              })
+              resolve(token)
+            } catch (error) {
+              console.error('reCAPTCHA execution failed:', error)
+              reject(
+                new Error(
+                  `reCAPTCHA execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                ),
+              )
+            }
+          })
+        } else {
+          // Retry after a short delay
+          setTimeout(checkGrecaptcha, 100)
+        }
       }
+
+      checkGrecaptcha()
+
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        reject(new Error('reCAPTCHA timeout - service not available'))
+      }, 10000)
+    } catch (error) {
+      reject(
+        new Error(
+          `reCAPTCHA initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        ),
+      )
     }
-
-    checkGrecaptcha()
-
-    // Timeout after 10 seconds
-    setTimeout(() => {
-      reject(new Error('reCAPTCHA timeout - service not available'))
-    }, 10000)
   })
 }
 
