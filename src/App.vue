@@ -121,6 +121,8 @@ const commands = {
       <p>🌟 <a href="https://github.com/sponsors/involvex" target="_blank">GitHub Sponsors</a> - Support my open-source work</p>
       <p>☕ <a href="https://buymeacoffee.com/involvex" target="_blank">Buy Me a Coffee</a> - Show your appreciation</p>
       <p>💝 <a href="https://paypal.me/involvex" target="_blank">PayPal</a> - Direct support</p>
+      
+      <p>💸 <a href="https://rewards.bing.com/welcome?rh=14525F68&ref=rafsrchae&form=ML2XE3&OCID=ML2XE3&PUBL=RewardsDO&CREA=ML2XE3" target="_blank">Microsoft Rewards</a></p>
       <p>Thank you for considering supporting my work! 🙏</p>
     </div>
   `,
@@ -189,7 +191,7 @@ const commands = {
       `
     }
     return '<div class="output">File not found</div>'
-  }
+  },
 }
 
 const executeCommand = async () => {
@@ -225,7 +227,10 @@ const executeCommand = async () => {
 const navigateHistory = (direction: number) => {
   if (commandHistory.value.length === 0) return
 
-  historyIndex.value = Math.max(0, Math.min(commandHistory.value.length, historyIndex.value + direction))
+  historyIndex.value = Math.max(
+    0,
+    Math.min(commandHistory.value.length, historyIndex.value + direction),
+  )
 
   if (historyIndex.value < commandHistory.value.length) {
     currentCommand.value = commandHistory.value[historyIndex.value]!
@@ -241,7 +246,9 @@ const executeClickableCommand = (command: string) => {
 }
 
 // Expose function globally for onclick handlers
-;(window as unknown as { executeClickableCommand: (command: string) => void }).executeClickableCommand = executeClickableCommand
+;(
+  window as unknown as { executeClickableCommand: (command: string) => void }
+).executeClickableCommand = executeClickableCommand
 
 onMounted(() => {
   setTimeout(() => {
@@ -252,7 +259,7 @@ onMounted(() => {
 
 <template>
   <div id="app" class="terminal-app">
-    <div class="terminal-window" :class="{ 'loaded': isLoaded }">
+    <div class="terminal-window" :class="{ loaded: isLoaded }">
       <div class="terminal-header">
         <div class="terminal-controls">
           <div class="control-btn close"></div>
@@ -278,16 +285,24 @@ onMounted(() => {
 
           <div v-if="showWelcome" class="output-section">
             <div class="ascii-art">
-              <pre class="ascii-text">    ██╗███╗   ██╗██╗   ██╗ ██████╗ ██╗     ██╗   ██╗███████╗██╗  ██╗
+              <pre class="ascii-text">
+    ██╗███╗   ██╗██╗   ██╗ ██████╗ ██╗     ██╗   ██╗███████╗██╗  ██╗
     ██║████╗  ██║██║   ██║██╔═══██╗██║     ██║   ██║██╔════╝╚██╗██╔╝
     ██║██╔██╗ ██║██║   ██║██║   ██║██║     ██║   ██║█████╗   ╚███╔╝
     ██║██║╚██╗██║╚██╗ ██╔╝██║   ██║██║     ╚██╗ ██╔╝██╔══╝   ██╔██╗
     ██║██║ ╚████║ ╚████╔╝ ╚██████╔╝███████╗ ╚████╔╝ ███████╗██╔╝ ██╗
-    ╚═╝╚═╝  ╚═══╝  ╚═══╝   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝</pre>
+    ╚═╝╚═╝  ╚═══╝  ╚═══╝   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝</pre
+              >
             </div>
             <div class="welcome-text">
               <p class="greeting">Welcome to Involvex's Terminal Portfolio</p>
-              <p class="description">Type <span class="highlight clickable-cmd" onclick="executeClickableCommand('help')">help</span> to see available commands</p>
+              <p class="description">
+                Type
+                <span class="highlight clickable-cmd" onclick="executeClickableCommand('help')"
+                  >help</span
+                >
+                to see available commands
+              </p>
               <p class="deployment-info">🚀 Deployed via GitHub Pages</p>
             </div>
           </div>
@@ -369,14 +384,24 @@ body {
 }
 
 @keyframes scanline {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Terminal cursor animation */
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .cursor {

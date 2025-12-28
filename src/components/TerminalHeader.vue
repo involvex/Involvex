@@ -22,7 +22,7 @@
 
 <script lang="ts">
 export default {
-  name: 'TerminalHeader'
+  name: 'TerminalHeader',
 }
 </script>
 
@@ -96,8 +96,13 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .terminal-text {

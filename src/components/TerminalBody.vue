@@ -14,7 +14,9 @@
 
         <div class="welcome-text">
           <p class="greeting">Welcome to Involvex's Terminal Portfolio</p>
-          <p class="description">Type <span class="highlight">help</span> to see available commands</p>
+          <p class="description">
+            Type <span class="highlight">help</span> to see available commands
+          </p>
         </div>
       </div>
 
@@ -65,15 +67,24 @@
           <div class="about-grid">
             <div class="about-card">
               <h4>👨‍💻 Developer</h4>
-              <p>Passionate full-stack developer with expertise in modern web technologies and open-source contributions.</p>
+              <p>
+                Passionate full-stack developer with expertise in modern web technologies and
+                open-source contributions.
+              </p>
             </div>
             <div class="about-card">
               <h4>🚀 Innovator</h4>
-              <p>Creating innovative solutions and contributing to the developer community through open-source projects.</p>
+              <p>
+                Creating innovative solutions and contributing to the developer community through
+                open-source projects.
+              </p>
             </div>
             <div class="about-card">
               <h4>🌐 Open Source</h4>
-              <p>Active contributor to various open-source projects and maintainer of several repositories on GitHub.</p>
+              <p>
+                Active contributor to various open-source projects and maintainer of several
+                repositories on GitHub.
+              </p>
             </div>
           </div>
         </div>
@@ -103,7 +114,9 @@
               </div>
               <p class="project-description">{{ project.description }}</p>
               <div class="project-tech">
-                <span v-for="tech in project.technologies" :key="tech" class="tech-tag">{{ tech }}</span>
+                <span v-for="tech in project.technologies" :key="tech" class="tech-tag">{{
+                  tech
+                }}</span>
               </div>
             </div>
           </div>
@@ -149,11 +162,11 @@
             <form @submit.prevent="submitContact">
               <div class="form-group">
                 <label for="name">Name:</label>
-                <input type="text" id="name" v-model="contactForm.name" required>
+                <input type="text" id="name" v-model="contactForm.name" required />
               </div>
               <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" v-model="contactForm.email" required>
+                <input type="email" id="email" v-model="contactForm.email" required />
               </div>
               <div class="form-group">
                 <label for="message">Message:</label>
@@ -229,66 +242,66 @@ const asciiArt = `
 
 const projects = ref([
   {
-    name: "BotForge",
-    description: "AI-powered bot creation platform with advanced automation capabilities",
-    technologies: ["Vue.js", "Node.js", "AI/ML", "WebSocket"],
-    github: "https://github.com/involvex/botforge",
-    demo: "https://botforge-one.vercel.app"
+    name: 'BotForge',
+    description: 'AI-powered bot creation platform with advanced automation capabilities',
+    technologies: ['Vue.js', 'Node.js', 'AI/ML', 'WebSocket'],
+    github: 'https://github.com/involvex/botforge',
+    demo: 'https://botforge-one.vercel.app',
   },
   {
-    name: "Involvex Portfolio",
-    description: "Terminal-style portfolio showcasing projects and skills",
-    technologies: ["Vue.js", "TypeScript", "CSS3", "Vite"],
-    github: "https://github.com/involvex/involvex"
+    name: 'Involvex Portfolio',
+    description: 'Terminal-style portfolio showcasing projects and skills',
+    technologies: ['Vue.js', 'TypeScript', 'CSS3', 'Vite'],
+    github: 'https://github.com/involvex/involvex',
   },
   {
-    name: "Open Source Contributions",
-    description: "Various contributions to open-source projects and community tools",
-    technologies: ["JavaScript", "Python", "Go", "Docker"],
-    github: "https://github.com/involvex"
-  }
+    name: 'Open Source Contributions',
+    description: 'Various contributions to open-source projects and community tools',
+    technologies: ['JavaScript', 'Python', 'Go', 'Docker'],
+    github: 'https://github.com/involvex',
+  },
 ])
 
 const skills = ref([
   {
-    name: "Frontend",
+    name: 'Frontend',
     items: [
-      { name: "Vue.js", level: 95 },
-      { name: "React", level: 90 },
-      { name: "TypeScript", level: 88 },
-      { name: "CSS/SCSS", level: 92 }
-    ]
+      { name: 'Vue.js', level: 95 },
+      { name: 'React', level: 90 },
+      { name: 'TypeScript', level: 88 },
+      { name: 'CSS/SCSS', level: 92 },
+    ],
   },
   {
-    name: "Backend",
+    name: 'Backend',
     items: [
-      { name: "Node.js", level: 90 },
-      { name: "Python", level: 85 },
-      { name: "Go", level: 80 },
-      { name: "PostgreSQL", level: 88 }
-    ]
+      { name: 'Node.js', level: 90 },
+      { name: 'Python', level: 85 },
+      { name: 'Go', level: 80 },
+      { name: 'PostgreSQL', level: 88 },
+    ],
   },
   {
-    name: "Tools & DevOps",
+    name: 'Tools & DevOps',
     items: [
-      { name: "Git", level: 95 },
-      { name: "Docker", level: 85 },
-      { name: "AWS", level: 80 },
-      { name: "CI/CD", level: 85 }
-    ]
-  }
+      { name: 'Git', level: 95 },
+      { name: 'Docker', level: 85 },
+      { name: 'AWS', level: 80 },
+      { name: 'CI/CD', level: 85 },
+    ],
+  },
 ])
 
 const contactForm = reactive({
   name: '',
   email: '',
-  message: ''
+  message: '',
 })
 
 const submitContact = () => {
   // Handle form submission
   console.log('Contact form submitted:', contactForm)
-  alert('Thank you for your message! I\'ll get back to you soon.')
+  alert("Thank you for your message! I'll get back to you soon.")
 
   // Reset form
   contactForm.name = ''
@@ -299,7 +312,7 @@ const submitContact = () => {
 
 <script lang="ts">
 export default {
-  name: 'TerminalBody'
+  name: 'TerminalBody',
 }
 </script>
 

@@ -176,7 +176,7 @@ const commands = {
       `
     }
     return '<div class="output">File not found</div>'
-  }
+  },
 }
 
 const executeCommand = async () => {
@@ -212,7 +212,10 @@ const executeCommand = async () => {
 const navigateHistory = (direction: number) => {
   if (commandHistory.value.length === 0) return
 
-  historyIndex.value = Math.max(0, Math.min(commandHistory.value.length, historyIndex.value + direction))
+  historyIndex.value = Math.max(
+    0,
+    Math.min(commandHistory.value.length, historyIndex.value + direction),
+  )
 
   if (historyIndex.value < commandHistory.value.length) {
     currentCommand.value = commandHistory.value[historyIndex.value]!
@@ -231,7 +234,7 @@ onMounted(() => {
 
 <script lang="ts">
 export default {
-  name: 'TerminalInput'
+  name: 'TerminalInput',
 }
 </script>
 

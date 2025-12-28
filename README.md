@@ -50,7 +50,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **GitHub**: [@involvex](https://github.com/involvex)
 - **Email**: [involvex@proton.me](mailto:involvex@proton.me)
-- **Portfolio**: [involvex.dev](https://involvex.dev)
 
 ---
 
