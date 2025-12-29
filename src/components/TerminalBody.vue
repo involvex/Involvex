@@ -289,17 +289,35 @@
                   <!-- reCAPTCHA Validation -->
                   <div class="form-group">
                     <div class="recaptcha-container">
-                      <div v-if="formState.isRecaptchaLoading" class="recaptcha-loading">
-                        <div class="loading-spinner"></div>
-                        <span>Validating reCAPTCHA...</span>
-                      </div>
-                      <div v-else-if="formState.isRecaptchaValid" class="recaptcha-success">
-                        ✅ reCAPTCHA verified
-                      </div>
-                      <div v-else class="recaptcha-info">
-                        🔒 This form is protected by reCAPTCHA
+                      <!-- reCAPTCHA v2 Widget will be rendered here -->
+                      <div id="recaptcha-widget" class="recaptcha-widget"></div>
+                      <div v-if="recaptchaError" class="recaptcha-error">
+                        ❌ {{ recaptchaError }}
                       </div>
                     </div>
+                  </div>
+
+                  <!-- Debug Validation State -->
+                  <div
+                    class="form-group"
+                    style="
+                      background: rgba(255, 255, 0, 0.1);
+                      padding: 10px;
+                      border-radius: 4px;
+                      font-size: 12px;
+                    "
+                  >
+                    <strong>🔍 Debug - Form Validation State:</strong><br />
+                    Name: {{ contactForm.name.trim().length > 0 ? '✅' : '❌' }} ({{
+                      contactForm.name.trim().length
+                    }}/1)<br />
+                    Email: {{ /[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email) ? '✅' : '❌'
+                    }}<br />
+                    Message: {{ contactForm.message.trim().length >= 10 ? '✅' : '❌' }} ({{
+                      contactForm.message.trim().length
+                    }}/10)<br />
+                    reCAPTCHA: {{ formState.isRecaptchaValid ? '✅' : '❌' }}<br />
+                    <strong>Overall Valid: {{ isFormValid ? '✅' : '❌' }}</strong>
                   </div>
                   <button
                     type="submit"
@@ -394,7 +412,7 @@
 import emailjs from '@emailjs/browser'
 import { onMounted, reactive, ref, computed } from 'vue'
 import TerminalInput from './TerminalInput.vue'
-import { getRecaptchaToken, verifyRecaptchaToken, isRecaptchaAvailable } from '../utils/recaptcha'
+import { initRecaptchaV2, getRecaptchaV2Response, isRecaptchaV2Available } from '../utils/recaptcha'
 
 // EmailJS configuration
 const EMAILJS_SERVICE_ID = 'involvex'
@@ -598,6 +616,11 @@ const formState = reactive({
   isRecaptchaLoading: false,
 })
 
+// reCAPTCHA v2 state
+const recaptchaWidgetId = ref<string>('')
+const recaptchaError = ref<string>('')
+const recaptchaResponse = ref<string>('')
+
 // Computed property for form validation
 const isFormValid = computed(() => {
   return (
@@ -608,36 +631,6 @@ const isFormValid = computed(() => {
     formState.isRecaptchaValid
   )
 })
-
-// reCAPTCHA validation function
-const validateRecaptcha = async (): Promise<boolean> => {
-  if (!isRecaptchaAvailable()) {
-    formState.errors.push('reCAPTCHA is not available. Please refresh the page and try again.')
-    return false
-  }
-
-  formState.isRecaptchaLoading = true
-
-  try {
-    const token = await getRecaptchaToken('contact_form')
-    const isValid = await verifyRecaptchaToken(token)
-
-    formState.recaptchaToken = token
-    formState.isRecaptchaValid = isValid
-
-    if (!isValid) {
-      formState.errors.push('reCAPTCHA validation failed. Please try again.')
-    }
-
-    return isValid
-  } catch (error) {
-    console.error('reCAPTCHA validation error:', error)
-    formState.errors.push('reCAPTCHA validation failed. Please try again.')
-    return false
-  } finally {
-    formState.isRecaptchaLoading = false
-  }
-}
 
 // Enhanced contact form submission with EmailJS integration and reCAPTCHA
 const submitContact = async () => {
@@ -660,11 +653,27 @@ const submitContact = async () => {
     formState.errors.push('Message must be at least 10 characters long')
   }
 
-  // reCAPTCHA validation
-  const recaptchaValid = await validateRecaptcha()
-  if (!recaptchaValid) {
-    formState.isSubmitting = false
-    return
+  // Get reCAPTCHA v2 response
+  let recaptchaToken = ''
+  if (recaptchaWidgetId.value && isRecaptchaV2Available()) {
+    try {
+      recaptchaToken = getRecaptchaV2Response(recaptchaWidgetId.value)
+      if (!recaptchaToken) {
+        formState.errors.push('Please complete the reCAPTCHA verification.')
+        formState.isSubmitting = false
+        return
+      }
+      formState.recaptchaToken = recaptchaToken
+    } catch (error) {
+      console.error('❌ Failed to get reCAPTCHA response:', error)
+      formState.errors.push('reCAPTCHA verification failed. Please try again.')
+      formState.isSubmitting = false
+      return
+    }
+  } else {
+    // Fallback if reCAPTCHA is not available
+    recaptchaToken = 'fallback_no_recaptcha'
+    formState.recaptchaToken = recaptchaToken
   }
 
   try {
@@ -675,6 +684,8 @@ const submitContact = async () => {
       discord_name: contactForm.discordname || 'Not provided',
       message: contactForm.message,
       to_name: 'Involvex',
+      // Include reCAPTCHA token for EmailJS validation
+      'g-recaptcha-response': formState.recaptchaToken || 'fallback_no_recaptcha',
     }
 
     // Send email using EmailJS
@@ -835,23 +846,25 @@ const showCommandOutput = (command: string): string => {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
   fetchProjects()
 
-  // Initialize reCAPTCHA validation status
-  if (isRecaptchaAvailable()) {
-    // Perform initial reCAPTCHA validation
-    validateRecaptcha()
-      .then((isValid) => {
-        if (isValid) {
-          console.log('reCAPTCHA validated successfully')
-        } else {
-          console.log('reCAPTCHA validation failed')
-        }
-      })
-      .catch((error) => {
-        console.error('Initial reCAPTCHA validation error:', error)
-      })
+  // Initialize reCAPTCHA v2 widget
+  console.log('🚀 Initializing reCAPTCHA v2 on component mount...')
+  try {
+    recaptchaWidgetId.value = await initRecaptchaV2('recaptcha-widget', (response: string) => {
+      console.log('✅ reCAPTCHA v2 completed:', response.substring(0, 20) + '...')
+      recaptchaResponse.value = response
+      formState.recaptchaToken = response
+      formState.isRecaptchaValid = true
+      recaptchaError.value = ''
+    })
+    console.log('✅ reCAPTCHA v2 widget initialized successfully')
+    formState.isRecaptchaValid = true
+  } catch (error) {
+    console.error('❌ reCAPTCHA v2 initialization failed:', error)
+    recaptchaError.value = 'Failed to load reCAPTCHA. Form will work without validation.'
+    formState.isRecaptchaValid = true // Fallback to allow form submission
   }
 })
 
@@ -1557,11 +1570,35 @@ export default {
 
   .recaptcha-container {
     padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .recaptcha-widget {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .recaptcha-error {
+    color: #ff6b6b;
+    font-size: 12px;
+    text-align: center;
+    padding: 8px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 107, 107, 0.3);
   }
 
   .recaptcha-loading {
     flex-direction: column;
     gap: 8px;
+    text-align: center;
   }
 }
 

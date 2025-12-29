@@ -1,84 +1,97 @@
-// reCAPTCHA v3 Enterprise utility functions
+// reCAPTCHA v2 (checkbox) utility functions for EmailJS integration
 
 // Global type declarations for reCAPTCHA
 declare global {
   interface Window {
-    grecaptcha: RecaptchaInstance
+    grecaptcha: RecaptchaV2Instance
   }
 }
 
-// reCAPTCHA type definitions
-interface RecaptchaInstance {
-  enterprise: RecaptchaEnterprise
+// reCAPTCHA v2 type definitions
+interface RecaptchaV2Instance {
+  render: (container: string | HTMLElement, options: RecaptchaV2Options) => string
+  getResponse: (widgetId: string) => string
+  reset: (widgetId: string) => void
 }
 
-interface RecaptchaEnterprise {
-  ready: (callback: () => void | Promise<void>) => void
-  execute: (siteKey: string, options: RecaptchaOptions) => Promise<string>
+interface RecaptchaV2Options {
+  sitekey: string
+  callback?: (response: string) => void
+  'expired-callback'?: () => void
+  'error-callback'?: () => void
+  theme?: string
+  size?: string
 }
 
-interface RecaptchaOptions {
-  action: string
-}
-
-// reCAPTCHA site key - in production, this should come from environment variables
-const RECAPTCHA_SITE_KEY =
-  import.meta.env.VITE_RECAPTCHA_SITEKEY || '6LecbjksAAAAAJCp4NMbtNEHucXwiyhMjMWpXwhZ'
+// reCAPTCHA site key - using the valid key from .env
+const RECAPTCHA_SITE_KEY = '6LecbjksAAAAAJCp4NMbtNEHucXwiyhMjMWpXwhZ'
 
 /**
- * Load reCAPTCHA script dynamically to avoid CORB issues
- * @param siteKey - reCAPTCHA site key
+ * Load reCAPTCHA v2 script dynamically
  * @returns Promise<void>
  */
-function loadRecaptchaScript(siteKey: string): Promise<void> {
+function loadRecaptchaV2Script(): Promise<void> {
   return new Promise((resolve, reject) => {
     // Check if script is already loaded
-    if (document.querySelector('script[src*="recaptcha/enterprise.js"]')) {
+    if (document.querySelector('script[src*="recaptcha/api.js"]')) {
+      console.log('✅ reCAPTCHA v2 script already loaded')
       resolve()
       return
     }
 
     const script = document.createElement('script')
-    script.src = `https://www.google.com/recaptcha/enterprise.js?render=${siteKey}`
+    script.src = `https://www.google.com/recaptcha/api.js?render=explicit&hl=en`
     script.async = true
     script.defer = true
 
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('Failed to load reCAPTCHA script'))
+    script.onload = () => {
+      console.log('✅ reCAPTCHA v2 script loaded successfully')
+      resolve()
+    }
+
+    script.onerror = () => {
+      console.error('❌ Failed to load reCAPTCHA v2 script')
+      reject(new Error('Failed to load reCAPTCHA script'))
+    }
 
     document.head.appendChild(script)
   })
 }
 
 /**
- * Initialize reCAPTCHA and get a token
- * @param action - The action being performed (e.g., 'contact_form')
- * @returns Promise<string> - reCAPTCHA token
+ * Initialize reCAPTCHA v2 widget
+ * @param containerId - HTML element ID to render the widget
+ * @param callback - Function to call when reCAPTCHA is completed
+ * @returns Promise<string> - Widget ID
  */
-export async function getRecaptchaToken(action: string = 'contact_form'): Promise<string> {
-  return new Promise((resolve, reject) => {
-    try {
-      // Load reCAPTCHA script if not already loaded
-      loadRecaptchaScript(RECAPTCHA_SITE_KEY)
+export async function initRecaptchaV2(
+  containerId: string = 'recaptcha-container',
+  callback?: (response: string) => void,
+): Promise<string> {
+  try {
+    await loadRecaptchaV2Script()
 
-      // Wait for grecaptcha to be available
+    // Wait for grecaptcha to be available
+    return new Promise((resolve, reject) => {
       const checkGrecaptcha = () => {
-        if (window.grecaptcha && window.grecaptcha.enterprise) {
-          window.grecaptcha.enterprise.ready(async () => {
-            try {
-              const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, {
-                action,
-              })
-              resolve(token)
-            } catch (error) {
-              console.error('reCAPTCHA execution failed:', error)
-              reject(
-                new Error(
-                  `reCAPTCHA execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-                ),
-              )
-            }
-          })
+        if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
+          try {
+            const widgetId = window.grecaptcha.render(containerId, {
+              sitekey: RECAPTCHA_SITE_KEY,
+              callback:
+                callback ||
+                ((response: string) => {
+                  console.log('✅ reCAPTCHA v2 completed:', response.substring(0, 20) + '...')
+                }),
+              theme: 'dark',
+              size: 'normal',
+            })
+            console.log('✅ reCAPTCHA v2 widget initialized:', widgetId)
+            resolve(widgetId)
+          } catch (error) {
+            console.error('❌ reCAPTCHA v2 render failed:', error)
+            reject(error)
+          }
         } else {
           // Retry after a short delay
           setTimeout(checkGrecaptcha, 100)
@@ -89,36 +102,78 @@ export async function getRecaptchaToken(action: string = 'contact_form'): Promis
 
       // Timeout after 10 seconds
       setTimeout(() => {
-        reject(new Error('reCAPTCHA timeout - service not available'))
+        reject(new Error('reCAPTCHA v2 initialization timeout'))
       }, 10000)
-    } catch (error) {
-      reject(
-        new Error(
-          `reCAPTCHA initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        ),
-      )
-    }
-  })
+    })
+  } catch (error) {
+    console.error('❌ reCAPTCHA v2 initialization failed:', error)
+    throw error
+  }
 }
 
 /**
- * Verify reCAPTCHA token on the server side
- * This would typically be done server-side, but for demo purposes
+ * Get reCAPTCHA v2 response token
+ * @param widgetId - Widget ID returned from initRecaptchaV2
+ * @returns string - reCAPTCHA response token
+ */
+export function getRecaptchaV2Response(widgetId: string): string {
+  if (!window.grecaptcha) {
+    throw new Error('reCAPTCHA v2 not loaded')
+  }
+
+  const response = window.grecaptcha.getResponse(widgetId)
+  console.log('📝 reCAPTCHA v2 response:', response.substring(0, 20) + '...')
+  return response
+}
+
+/**
+ * Reset reCAPTCHA v2 widget
+ * @param widgetId - Widget ID to reset
+ */
+export function resetRecaptchaV2(widgetId: string): void {
+  if (!window.grecaptcha) {
+    console.warn('reCAPTCHA v2 not loaded')
+    return
+  }
+
+  window.grecaptcha.reset(widgetId)
+  console.log('🔄 reCAPTCHA v2 reset')
+}
+
+/**
+ * Check if reCAPTCHA v2 is available
+ * @returns boolean - Whether reCAPTCHA v2 is loaded
+ */
+export function isRecaptchaV2Available(): boolean {
+  return !!(window.grecaptcha && typeof window.grecaptcha.render === 'function')
+}
+
+/**
+ * Legacy function for backward compatibility
+ * @param action - The action being performed
+ * @returns Promise<string> - reCAPTCHA token (returns empty string for v2)
+ */
+export async function getRecaptchaToken(_action: string = 'contact_form'): Promise<string> {
+  console.warn(
+    '⚠️ getRecaptchaToken() is deprecated. Use initRecaptchaV2() and getRecaptchaV2Response() instead.',
+  )
+  return ''
+}
+
+/**
+ * Verify reCAPTCHA token (simplified for v2)
  * @param token - reCAPTCHA token
  * @returns Promise<boolean> - Whether the token is valid
  */
 export async function verifyRecaptchaToken(token: string): Promise<boolean> {
   try {
-    if (!token || typeof token !== 'string') {
-      throw new Error('Invalid token provided')
+    if (!token || typeof token !== 'string' || token.length === 0) {
+      console.warn('⚠️ Empty reCAPTCHA v2 token')
+      return false
     }
 
-    // In a real implementation, you would send this to your server
-    // to verify with Google's reCAPTCHA API
-    console.log('Token would be verified on server:', token.substring(0, 20) + '...')
-
-    // For demo purposes, we'll assume the token is valid
-    // In production, implement server-side verification
+    // For demo purposes, accept any non-empty token
+    console.log('✅ reCAPTCHA v2 token accepted (demo mode)')
     return true
   } catch (error) {
     console.error('reCAPTCHA verification failed:', error)
@@ -127,11 +182,11 @@ export async function verifyRecaptchaToken(token: string): Promise<boolean> {
 }
 
 /**
- * Check if reCAPTCHA is available
+ * Legacy function for backward compatibility
  * @returns boolean - Whether reCAPTCHA is loaded
  */
 export function isRecaptchaAvailable(): boolean {
-  return !!(window.grecaptcha && window.grecaptcha.enterprise)
+  return isRecaptchaV2Available()
 }
 
 /**
@@ -143,10 +198,8 @@ export function getRecaptchaSiteKey(): string {
 }
 
 /**
- * Reset/cleanup reCAPTCHA state (useful for forms)
+ * Reset reCAPTCHA state
  */
 export function resetRecaptcha(): void {
-  // Note: reCAPTCHA v3 Enterprise doesn't have a direct reset method like v2
-  // This is a placeholder for future implementations
-  console.log('reCAPTCHA reset called - v3 Enterprise does not require manual reset')
+  console.log('🔄 reCAPTCHA reset called (v2 compatibility)')
 }
