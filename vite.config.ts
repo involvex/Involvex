@@ -8,16 +8,16 @@ import Inspect from 'vite-plugin-inspect'
 
 const dev = 'dev'
 
-export default defineConfig(({ command: _command, mode }) => {
-  // Determine base path for GitHub Pages
-  const isProduction = mode === 'production'
-  const isGitHubPages = isProduction && process.env.GITHUB_ACTIONS === 'true'
-  
+export default defineConfig(({ command: _command }) => {
+  // // Determine base path for GitHub Pages
+  // const isProduction = mode === 'production'
+  // const isGitHubPages = isProduction && process.env.GITHUB_ACTIONS === 'true'
+
   // For GitHub Pages, use repository name as base path
-  const base = isGitHubPages ? '/involvex/' : '/'
-  
+  // const base = isGitHubPages ? '/involvex/' : '/'
+
   return {
-    base,
+    base: '/involvex/',
     server: {
       port: 8098,
       host: '0.0.0.0',
