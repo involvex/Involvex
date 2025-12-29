@@ -17,7 +17,7 @@ export default defineConfig(({ command: _command }) => {
   // const base = isGitHubPages ? '/involvex/' : '/'
 
   return {
-    base: '/',
+    base: './',
     server: {
       port: 8098,
       host: '0.0.0.0',
