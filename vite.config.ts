@@ -17,7 +17,7 @@ export default defineConfig(({ command: _command }) => {
   // const base = isGitHubPages ? '/involvex/' : '/'
 
   return {
-    base: '/involvex/',
+    base: '/',
     server: {
       port: 8098,
       host: '0.0.0.0',
@@ -35,11 +35,20 @@ export default defineConfig(({ command: _command }) => {
     envPrefix: ['VITE_'],
     build: {
       sourcemap: dev ? 'inline' : false,
+      assetsDir: 'assets',
+      copyPublicDir: true,
+      polyfillModulePreload: false,
+      modulePreload: false,
       rollupOptions: {
+        output: {
+          entryFileNames: `assets/[name].js`,
+          chunkFileNames: `assets/[name].js`,
+          assetFileNames: `assets/[name].[ext]`,
+        },
         input: {
           main: 'index.html',
-          404: 'public/404.html'
-        }
+          404: 'public/404.html',
+        },
       }
     },
     resolve: {
