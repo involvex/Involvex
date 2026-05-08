@@ -57,6 +57,7 @@ This message was sent from your portfolio website.
 ### Step 5: Configure Environment Variables
 
 1. Copy the `.env.example` file to `.env`:
+
    ```bash
    cp .env.example .env
    ```
@@ -71,6 +72,7 @@ This message was sent from your portfolio website.
 ### Step 6: Test the Setup
 
 1. Start your development server:
+
    ```bash
    npm run dev
    ```
@@ -82,6 +84,7 @@ This message was sent from your portfolio website.
 ## Free Plan Limits
 
 EmailJS free plan includes:
+
 - 200 emails per month
 - 50 emails per day
 - Unlimited email templates
@@ -106,6 +109,7 @@ EmailJS free plan includes:
 ### Debug Mode
 
 To enable debug logging, add this to your `.env` file:
+
 ```env
 VITE_EMAILJS_DEBUG=true
 ```
