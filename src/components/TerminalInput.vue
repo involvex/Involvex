@@ -1,24 +1,24 @@
 <template>
-  <div class="terminal-input-section">
-    <div class="terminal-line">
-      <span class="prompt">involvex@portfolio:~$</span>
-      <input
-        ref="commandInputRef"
-        v-model="currentCommand"
-        @keydown.enter="handleEnterKey"
-        @keydown.up="navigateHistory(-1)"
-        @keydown.down="navigateHistory(1)"
-        class="command-input"
-        placeholder="Type a command..."
-        autocomplete="off"
-        spellcheck="false"
-      />
-    </div>
-  </div>
+	<div class="terminal-input-section">
+		<div class="terminal-line">
+			<span class="prompt">involvex@portfolio:~$</span>
+			<input
+				ref="commandInputRef"
+				v-model="currentCommand"
+				@keydown.enter="handleEnterKey"
+				@keydown.up="navigateHistory(-1)"
+				@keydown.down="navigateHistory(1)"
+				class="command-input"
+				placeholder="Type a command..."
+				autocomplete="off"
+				spellcheck="false"
+			/>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, defineEmits } from 'vue'
+import {nextTick, onMounted, ref} from 'vue'
 
 const currentCommand = ref('')
 const commandHistory = ref<string[]>([])
@@ -27,11 +27,11 @@ const commandOutput = ref('')
 const commandInputRef = ref<HTMLInputElement | null>(null)
 
 const emit = defineEmits<{
-  'command-submitted': [command: string]
+	'command-submitted': [command: string]
 }>()
 
 const commands = {
-  help: () => `
+	help: () => `
     <div class="help-output">
       <h3>Available Commands:</h3>
       <div class="command-list">
@@ -75,7 +75,7 @@ const commands = {
     </div>
   `,
 
-  about: () => `
+	about: () => `
     <div class="about-output">
       <h3>About Involvex</h3>
       <p>👨‍💻 Full-stack developer passionate about creating innovative solutions</p>
@@ -85,7 +85,7 @@ const commands = {
     </div>
   `,
 
-  projects: () => `
+	projects: () => `
     <div class="projects-output">
       <h3>Featured Projects</h3>
       <div class="project-item">
@@ -99,7 +99,7 @@ const commands = {
     </div>
   `,
 
-  skills: () => `
+	skills: () => `
     <div class="skills-output">
       <h3>Technical Skills</h3>
       <div class="skill-category">
@@ -117,7 +117,7 @@ const commands = {
     </div>
   `,
 
-  contact: () => `
+	contact: () => `
     <div class="contact-output">
       <h3>Get In Touch</h3>
       <p>📧 Email: <a href="mailto:contact@involvex.dev">contact@involvex.dev</a></p>
@@ -127,7 +127,7 @@ const commands = {
     </div>
   `,
 
-  sponsor: () => `
+	sponsor: () => `
     <div class="sponsor-output">
       <h3>Support My Work</h3>
       <p>🌟 <a href="https://github.com/sponsors/involvex" target="_blank">GitHub Sponsors</a> - Support my open-source work</p>
@@ -137,21 +137,21 @@ const commands = {
     </div>
   `,
 
-  github: () => {
-    window.open('https://github.com/involvex', '_blank')
-    return '<div class="output">Opening GitHub profile...</div>'
-  },
+	github: () => {
+		window.open('https://github.com/involvex', '_blank')
+		return '<div class="output">Opening GitHub profile...</div>'
+	},
 
-  clear: () => {
-    commandOutput.value = ''
-    return ''
-  },
+	clear: () => {
+		commandOutput.value = ''
+		return ''
+	},
 
-  whoami: () => '<div class="output">involvex</div>',
+	whoami: () => '<div class="output">involvex</div>',
 
-  date: () => `<div class="output">${new Date().toString()}</div>`,
+	date: () => `<div class="output">${new Date().toString()}</div>`,
 
-  ls: () => `
+	ls: () => `
     <div class="output">
       <div>📁 projects/</div>
       <div>📁 skills/</div>
@@ -161,135 +161,135 @@ const commands = {
     </div>
   `,
 
-  pwd: () => '<div class="output">/home/involvex/portfolio</div>',
+	pwd: () => '<div class="output">/home/involvex/portfolio</div>',
 
-  cat: (args: string) => {
-    if (args.includes('README')) {
-      return `
+	cat: (args: string) => {
+		if (args.includes('README')) {
+			return `
         <div class="output">
           <h3>Welcome to Involvex's Portfolio</h3>
           <p>This is an interactive terminal-style portfolio showcasing my work and skills.</p>
           <p>Type 'help' to see available commands.</p>
         </div>
       `
-    }
-    return '<div class="output">File not found</div>'
-  },
+		}
+		return '<div class="output">File not found</div>'
+	},
 }
 
 // Removed unused executeCommand function - replaced with handleEnterKey
 
 const navigateHistory = (direction: number) => {
-  if (commandHistory.value.length === 0) return
+	if (commandHistory.value.length === 0) return
 
-  historyIndex.value = Math.max(
-    0,
-    Math.min(commandHistory.value.length, historyIndex.value + direction),
-  )
+	historyIndex.value = Math.max(
+		0,
+		Math.min(commandHistory.value.length, historyIndex.value + direction),
+	)
 
-  if (historyIndex.value < commandHistory.value.length) {
-    currentCommand.value = commandHistory.value[historyIndex.value]!
-  } else {
-    currentCommand.value = ''
-  }
+	if (historyIndex.value < commandHistory.value.length) {
+		currentCommand.value = commandHistory.value[historyIndex.value]!
+	} else {
+		currentCommand.value = ''
+	}
 }
 
 const handleEnterKey = () => {
-  const command = currentCommand.value.trim()
-  if (command) {
-    // Add to history
-    if (commandHistory.value[commandHistory.value.length - 1] !== command) {
-      commandHistory.value.push(command)
-    }
-    historyIndex.value = commandHistory.value.length
+	const command = currentCommand.value.trim()
+	if (command) {
+		// Add to history
+		if (commandHistory.value[commandHistory.value.length - 1] !== command) {
+			commandHistory.value.push(command)
+		}
+		historyIndex.value = commandHistory.value.length
 
-    // Emit command-submitted event
-    emit('command-submitted', command)
+		// Emit command-submitted event
+		emit('command-submitted', command)
 
-    // Clear the input
-    currentCommand.value = ''
-  }
+		// Clear the input
+		currentCommand.value = ''
+	}
 }
 
 const executeNavigationCommand = (command: string) => {
-  emit('command-submitted', command)
+	emit('command-submitted', command)
 }
 
 const focusInput = () => {
-  nextTick(() => {
-    if (commandInputRef.value) {
-      commandInputRef.value.focus()
-    }
-  })
+	nextTick(() => {
+		if (commandInputRef.value) {
+			commandInputRef.value.focus()
+		}
+	})
 }
 
 // Expose function globally for onclick handlers
-;(window as typeof window & { executeCommand?: (command: string) => void }).executeCommand =
-  executeNavigationCommand
+;(window as typeof window & {executeCommand?: (command: string) => void}).executeCommand =
+	executeNavigationCommand
 
 onMounted(() => {
-  // Automatically focus the input
-  nextTick(() => {
-    if (commandInputRef.value) {
-      commandInputRef.value.focus()
-    }
-  })
+	// Automatically focus the input
+	nextTick(() => {
+		if (commandInputRef.value) {
+			commandInputRef.value.focus()
+		}
+	})
 
-  // Show welcome message
-  setTimeout(() => {
-    commandOutput.value = commands.help()
-  }, 1000)
+	// Show welcome message
+	setTimeout(() => {
+		commandOutput.value = commands.help()
+	}, 1000)
 })
 
 // Expose methods for parent components
 defineExpose({
-  focusInput,
-  commandInputRef,
+	focusInput,
+	commandInputRef,
 })
 </script>
 
 <script lang="ts">
 export default {
-  name: 'TerminalInput',
+	name: 'TerminalInput',
 }
 </script>
 
 <style scoped>
 .terminal-input-section {
-  margin-top: 20px;
+	margin-top: 20px;
 }
 
 .terminal-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
 }
 
 .prompt {
-  color: #00ff00;
-  font-weight: 600;
-  white-space: nowrap;
+	color: #00ff00;
+	font-weight: 600;
+	white-space: nowrap;
 }
 
 .command-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-family: inherit;
-  font-size: inherit;
-  outline: none;
-  caret-color: #00ff00;
+	flex: 1;
+	background: transparent;
+	border: none;
+	color: #ffffff;
+	font-family: inherit;
+	font-size: inherit;
+	outline: none;
+	caret-color: #00ff00;
 }
 
 .command-input::placeholder {
-  color: #666;
+	color: #666;
 }
 
 .command-output {
-  margin-left: 20px;
-  margin-bottom: 20px;
+	margin-left: 20px;
+	margin-bottom: 20px;
 }
 
 .help-output h3,
@@ -298,107 +298,107 @@ export default {
 .skills-output h3,
 .contact-output h3,
 .sponsor-output h3 {
-  color: #00ff00;
-  margin-bottom: 15px;
+	color: #00ff00;
+	margin-bottom: 15px;
 }
 
 .command-list {
-  margin: 15px 0;
+	margin: 15px 0;
 }
 
 .command-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  gap: 15px;
+	display: flex;
+	align-items: center;
+	margin-bottom: 8px;
+	gap: 15px;
 }
 
 .cmd {
-  color: #00ff00;
-  font-weight: 600;
-  min-width: 80px;
+	color: #00ff00;
+	font-weight: 600;
+	min-width: 80px;
 }
 
 .cmd.clickable {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 2px 4px;
-  border-radius: 3px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	padding: 2px 4px;
+	border-radius: 3px;
 }
 
 .cmd.clickable:hover {
-  background: rgba(0, 255, 0, 0.2);
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
-  transform: translateX(2px);
+	background: rgba(0, 255, 0, 0.2);
+	text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+	transform: translateX(2px);
 }
 
 .command-item {
-  cursor: pointer;
-  transition: all 0.2s ease;
+	cursor: pointer;
+	transition: all 0.2s ease;
 }
 
 .command-item:hover {
-  background: rgba(0, 255, 0, 0.05);
-  border-radius: 4px;
-  padding: 2px;
+	background: rgba(0, 255, 0, 0.05);
+	border-radius: 4px;
+	padding: 2px;
 }
 
 .desc {
-  color: #cccccc;
+	color: #cccccc;
 }
 
 .project-item {
-  margin-bottom: 15px;
-  padding: 10px;
-  background: rgba(0, 255, 0, 0.05);
-  border: 1px solid rgba(0, 255, 0, 0.2);
-  border-radius: 4px;
+	margin-bottom: 15px;
+	padding: 10px;
+	background: rgba(0, 255, 0, 0.05);
+	border: 1px solid rgba(0, 255, 0, 0.2);
+	border-radius: 4px;
 }
 
 .project-link {
-  color: #00ff00;
-  font-size: 14px;
+	color: #00ff00;
+	font-size: 14px;
 }
 
 .project-link a {
-  color: #00ff00;
-  text-decoration: none;
+	color: #00ff00;
+	text-decoration: none;
 }
 
 .project-link a:hover {
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+	text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
 }
 
 .skill-category {
-  margin-bottom: 10px;
-  padding: 8px;
-  background: rgba(0, 255, 0, 0.05);
-  border-radius: 4px;
+	margin-bottom: 10px;
+	padding: 8px;
+	background: rgba(0, 255, 0, 0.05);
+	border-radius: 4px;
 }
 
 .output {
-  color: #cccccc;
-  margin: 10px 0;
+	color: #cccccc;
+	margin: 10px 0;
 }
 
 .error {
-  color: #ff6b6b;
-  margin: 10px 0;
+	color: #ff6b6b;
+	margin: 10px 0;
 }
 
 .contact-output p,
 .sponsor-output p {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .contact-output a,
 .sponsor-output a {
-  color: #00ff00;
-  text-decoration: none;
+	color: #00ff00;
+	text-decoration: none;
 }
 
 .contact-output a:hover,
 .sponsor-output a:hover {
-  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+	text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
 }
 </style>
