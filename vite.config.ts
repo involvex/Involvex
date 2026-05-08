@@ -6,15 +6,8 @@ import Inspect from 'vite-plugin-inspect'
 import vue from '@vitejs/plugin-vue'
 import {defineConfig} from 'vite'
 
-const dev = 'dev'
-
-export default defineConfig(({command: _command}) => {
-	// // Determine base path for GitHub Pages
-	// const isProduction = mode === 'production'
-	// const isGitHubPages = isProduction && process.env.GITHUB_ACTIONS === 'true'
-
-	// For GitHub Pages, use repository name as base path
-	// const base = isGitHubPages ? '/involvex/' : '/'
+export default defineConfig(({mode}) => {
+	const isDev = mode === 'development'
 
 	return {
 		base: './',
@@ -34,20 +27,13 @@ export default defineConfig(({command: _command}) => {
 		],
 		envPrefix: ['VITE_'],
 		build: {
-			sourcemap: dev ? 'inline' : false,
-			assetsDir: 'assets',
-			copyPublicDir: true,
-			polyfillModulePreload: false,
+			sourcemap: isDev ? 'inline' : false,
 			modulePreload: false,
 			rollupOptions: {
 				output: {
-					entryFileNames: `assets/[name].js`,
-					chunkFileNames: `assets/[name].js`,
-					assetFileNames: `assets/[name].[ext]`,
-				},
-				input: {
-					main: 'index.html',
-					404: 'public/404.html',
+					entryFileNames: isDev ? 'assets/[name].js' : 'assets/[name].[hash].js',
+					chunkFileNames: isDev ? 'assets/[name].js' : 'assets/[name].[hash].js',
+					assetFileNames: isDev ? 'assets/[name].[ext]' : 'assets/[name].[hash].[ext]',
 				},
 			},
 		},
