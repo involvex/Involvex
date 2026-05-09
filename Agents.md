@@ -332,7 +332,7 @@ VITE_EMAILJS_PUBLIC_KEY=your_public_key
 ## Contact Information
 
 - **GitHub**: [@involvex](https://github.com/involvex)
-- **Email**: [involvex@proton.me](mailto:39644169+involvex@users.noreply.github.com)
+- **Email**: [involvex@proton.me](mailto:involvex@proton.me)
 
 ---
 

@@ -282,173 +282,47 @@
 					<div class="output-section">
 						<div class="contact-content">
 							<h3 class="section-title">Get In Touch</h3>
-
-							<!-- Form Feedback Messages -->
-							<div
-								v-if="formState.errors.length > 0"
-								class="form-error"
-							>
-								<h3>❌ Validation Errors</h3>
-								<ul>
-									<li
-										v-for="error in formState.errors"
-										:key="error"
+							<div class="contact-info">
+								<p>
+									📧 <strong>Email:</strong>
+									<a
+										href="mailto:involvex@proton.me"
+										class="contact-link"
+										>involvex@proton.me</a
 									>
-										{{ error }}
-									</li>
-								</ul>
-							</div>
-
-							<div
-								v-if="formState.isSubmitting"
-								class="form-loading"
-							>
-								<h3>⏳ Sending Message...</h3>
-								<p>Please wait while your message is being sent.</p>
-								<div class="loading-spinner"></div>
-							</div>
-
-							<div
-								v-if="formState.isSubmitted"
-								class="form-success"
-							>
-								<h3>✅ Message Sent Successfully!</h3>
-								<p>Thank you for your message! I'll get back to you within 24 hours.</p>
-							</div>
-
-							<div class="contact-form">
-								<form @submit.prevent="submitContact">
-									<div class="form-group">
-										<label for="contact-name">Name:</label>
-										<input
-											type="text"
-											id="contact-name"
-											v-model="contactForm.name"
-											:disabled="formState.isSubmitting"
-											required
-											placeholder="Your name"
-										/>
-									</div>
-									<div class="form-group">
-										<label for="contact-email">Email:</label>
-										<input
-											type="email"
-											id="contact-email"
-											v-model="contactForm.email"
-											:disabled="formState.isSubmitting"
-											required
-											placeholder="your.email@example.com"
-										/>
-									</div>
-									<div class="form-group">
-										<label for="discord-name">Discord:</label>
-										<input
-											type="text"
-											id="discord-name"
-											v-model="contactForm.discordname"
-											:disabled="formState.isSubmitting"
-											placeholder="Your Discord username (optional)"
-										/>
-									</div>
-									<div class="form-group">
-										<label for="contact-message">
-											Message:
-											<span
-												class="char-count"
-												:class="{
-													warning: contactForm.message.length < 10,
-													error: contactForm.message.length > 500,
-												}"
-											>
-												({{ contactForm.message.length }}/500)
-											</span>
-										</label>
-										<textarea
-											id="contact-message"
-											v-model="contactForm.message"
-											rows="4"
-											:disabled="formState.isSubmitting"
-											required
-											placeholder="Your message... (minimum 10 characters)"
-											maxlength="500"
-										></textarea>
-									</div>
-
-									<!-- reCAPTCHA Validation -->
-									<div class="form-group">
-										<div class="recaptcha-container">
-											<!-- reCAPTCHA v2 Widget will be rendered here -->
-											<div
-												id="recaptcha-widget"
-												class="recaptcha-widget"
-											></div>
-											<div
-												v-if="recaptchaError"
-												class="recaptcha-error"
-											>
-												❌ {{ recaptchaError }}
-											</div>
-										</div>
-									</div>
-
-									<!-- Debug Validation State -->
-									<div
-										class="form-group"
-										style="
-											background: rgba(255, 255, 0, 0.1);
-											padding: 10px;
-											border-radius: 4px;
-											font-size: 12px;
-										"
+								</p>
+								<p>
+									🐙 <strong>GitHub:</strong>
+									<a
+										href="https://github.com/involvex"
+										target="_blank"
+										class="contact-link"
+										>@involvex</a
 									>
-										<strong>🔍 Debug - Form Validation State:</strong><br />
-										Name: {{ contactForm.name.trim().length > 0 ? '✅' : '❌' }} ({{
-											contactForm.name.trim().length
-										}}/1)<br />
-										Email: {{ /[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email) ? '✅' : '❌'
-										}}<br />
-										Message: {{ contactForm.message.trim().length >= 10 ? '✅' : '❌' }} ({{
-											contactForm.message.trim().length
-										}}/10)<br />
-										reCAPTCHA: {{ formState.isRecaptchaValid ? '✅' : '❌' }}<br />
-										<strong>Overall Valid: {{ isFormValid ? '✅' : '❌' }}</strong>
-									</div>
-									<button
-										type="submit"
-										class="submit-btn"
-										:disabled="
-											formState.isSubmitting || formState.isRecaptchaLoading || !isFormValid
-										"
-									>
-										<span class="btn-icon">
-											{{
-												formState.isSubmitting ? '📤' : formState.isRecaptchaLoading ? '🔄' : '📧'
-											}}
-										</span>
-										{{
-											formState.isSubmitting
-												? 'Sending...'
-												: formState.isRecaptchaLoading
-													? 'Validating...'
-													: 'Send Message'
-										}}
-									</button>
-								</form>
+								</p>
+								<p>💬 <strong>Discord:</strong> involvex</p>
 							</div>
-							<div class="contact-links">
+							<div class="contact-actions">
+								<a
+									href="mailto:involvex@proton.me?subject=Portfolio Contact&body=Hi Involvex,%0A%0AI'm reaching out from your portfolio..."
+									class="contact-btn"
+								>
+									<span class="btn-icon">📧</span>
+									Send Email
+								</a>
 								<a
 									href="https://github.com/involvex"
 									target="_blank"
-									class="contact-link"
+									class="contact-btn"
 								>
-									<span class="link-icon">🐙</span> GitHub
+									<span class="btn-icon">🐙</span>
+									GitHub Profile
 								</a>
-								<a
-									href="mailto:contact@involvex97@gmail.com"
-									class="contact-link"
-								>
-									<span class="link-icon">📧</span> Email
-								</a>
+							</div>
+							<div class="contact-note">
+								<p>
+									💡 Feel free to reach out for collaborations, questions, or just to say hello!
+								</p>
 							</div>
 						</div>
 					</div>
@@ -518,15 +392,8 @@
 </template>
 
 <script setup lang="ts">
-import {getRecaptchaV2Response, initRecaptchaV2, isRecaptchaV2Available} from '../utils/recaptcha'
-import {computed, onMounted, reactive, ref} from 'vue'
 import TerminalInput from './TerminalInput.vue'
-import emailjs from '@emailjs/browser'
-
-// EmailJS configuration
-const EMAILJS_SERVICE_ID = 'involvex'
-const EMAILJS_TEMPLATE_ID = 'template'
-const EMAILJS_PUBLIC_KEY = 'hCOUKo1H7J90KW7QC'
+import {onMounted, ref} from 'vue'
 
 const currentView = defineModel<string>('currentView', {
 	default: 'welcome',
@@ -581,21 +448,37 @@ const fetchProjects = async () => {
 	projectsError.value = null
 
 	try {
-		const response = await fetch(
-			'https://api.github.com/users/involvex/repos?sort=updated&per_page=12',
-		)
+		// Fetch all repos using pagination
+		let allRepos: GitHubApiResponse[] = []
+		let page = 1
+		let hasMore = true
 
-		if (!response.ok) {
-			throw new Error(`GitHub API error: ${response.status}`)
+		while (hasMore) {
+			const response = await fetch(
+				`https://api.github.com/users/involvex/repos?per_page=100&page=${page}`,
+			)
+
+			if (!response.ok) {
+				throw new Error(`GitHub API error: ${response.status}`)
+			}
+
+			const repos = await response.json()
+
+			if (repos.length === 0) {
+				hasMore = false
+			} else {
+				allRepos = [...allRepos, ...repos]
+				page++
+				// Safety limit to prevent infinite loops
+				if (page > 10) hasMore = false
+			}
 		}
 
-		const repos = await response.json()
-
-		// Filter out forks and sort by stars
-		const filteredRepos = repos
+		// Filter out forks and sort by stars (descending)
+		const filteredRepos = allRepos
 			.filter((repo: GitHubApiResponse) => !repo.fork)
 			.sort((a: GitHubApiResponse, b: GitHubApiResponse) => b.stargazers_count - a.stargazers_count)
-			.slice(0, 8) // Limit to top 8 projects
+			.slice(0, 5) // Limit to top 5 projects
 
 		// Transform GitHub API response to our format
 		projects.value = filteredRepos.map(
@@ -680,9 +563,9 @@ const skills = ref([
 	{
 		name: 'Frontend',
 		items: [
-			{name: 'Vue.js', level: 75},
+			{name: 'Ink', level: 85},
 			{name: 'React', level: 70},
-			{name: 'TypeScript', level: 68},
+			{name: 'TypeScript', level: 75},
 			{name: 'CSS/SCSS', level: 85},
 			{name: 'HTML5', level: 90},
 		],
@@ -690,154 +573,52 @@ const skills = ref([
 	{
 		name: 'Backend',
 		items: [
-			{name: 'Node.js', level: 82},
-			{name: 'Python', level: 85},
-			{name: 'PostgreSQL', level: 75},
-			{name: 'MongoDB', level: 70},
+			{name: 'Bun', level: 86},
+			{name: 'Node.js', level: 85},
+			{name: 'Python', level: 75},
+			{name: 'Tauri', level: 75},
+			{name: 'Rust', level: 55},
+		],
+	},
+	{
+		name: 'Mobile Development',
+		items: [
+			{name: 'Flutter', level: 75},
+			{name: 'Ionic', level: 75},
+			{name: 'Expo', level: 75},
+			{name: 'React Native', level: 70},
 		],
 	},
 	{
 		name: 'Tools & Others',
 		items: [
 			{name: 'Git', level: 80},
-			{name: 'Docker', level: 65},
-			{name: 'AWS', level: 60},
+			{name: 'Worker', level: 75},
+			{name: 'Powershell', level: 65},
 			{name: 'Linux', level: 75},
 		],
 	},
+	{
+		name: 'Agentic Tools',
+		items: [
+			{name: 'Opencode', level: 75},
+			{name: 'Kilo', level: 75},
+			{name: 'Copilot', level: 75},
+			{name: 'Claude', level: 75},
+			{name: 'Gemini', level: 75},
+			{name: 'Cline', level: 75},
+		],
+	},
+	{
+		name: 'Favorite Frameworks',
+		items: [
+			{name: 'Ink', level: 85},
+			{name: 'Bun', level: 85},
+			{name: 'Tauri', level: 75},
+			{name: 'Flutter', level: 75},
+		],
+	},
 ])
-
-// Contact form
-const contactForm = reactive({
-	name: '',
-	email: '',
-	message: '',
-	discordname: '',
-})
-
-// Form validation and submission state
-const formState = reactive({
-	isSubmitting: false,
-	errors: [] as string[],
-	isSubmitted: false,
-	recaptchaToken: '',
-	isRecaptchaValid: false,
-	isRecaptchaLoading: false,
-})
-
-// reCAPTCHA v2 state
-const recaptchaWidgetId = ref<string>('')
-const recaptchaError = ref<string>('')
-const recaptchaResponse = ref<string>('')
-
-// Computed property for form validation
-const isFormValid = computed(() => {
-	return (
-		contactForm.name.trim().length > 0 &&
-		contactForm.email.trim().length > 0 &&
-		/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email) &&
-		contactForm.message.trim().length >= 10 &&
-		formState.isRecaptchaValid
-	)
-})
-
-// Enhanced contact form submission with EmailJS integration and reCAPTCHA
-const submitContact = async () => {
-	formState.errors = []
-	formState.isSubmitting = true
-	formState.isSubmitted = false
-
-	// Validation
-	if (!contactForm.name.trim()) {
-		formState.errors.push('Name is required')
-	}
-	if (!contactForm.email.trim()) {
-		formState.errors.push('Email is required')
-	} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email)) {
-		formState.errors.push('Please enter a valid email address')
-	}
-	if (!contactForm.message.trim()) {
-		formState.errors.push('Message is required')
-	} else if (contactForm.message.trim().length < 10) {
-		formState.errors.push('Message must be at least 10 characters long')
-	}
-
-	// Get reCAPTCHA v2 response
-	let recaptchaToken = ''
-	if (recaptchaWidgetId.value && isRecaptchaV2Available()) {
-		try {
-			recaptchaToken = getRecaptchaV2Response(recaptchaWidgetId.value)
-			if (!recaptchaToken) {
-				formState.errors.push('Please complete the reCAPTCHA verification.')
-				formState.isSubmitting = false
-				return
-			}
-			formState.recaptchaToken = recaptchaToken
-		} catch (error) {
-			console.error('❌ Failed to get reCAPTCHA response:', error)
-			formState.errors.push('reCAPTCHA verification failed. Please try again.')
-			formState.isSubmitting = false
-			return
-		}
-	} else {
-		// Fallback if reCAPTCHA is not available
-		recaptchaToken = 'fallback_no_recaptcha'
-		formState.recaptchaToken = recaptchaToken
-	}
-
-	try {
-		// Prepare email template parameters
-		const templateParams = {
-			from_name: contactForm.name,
-			from_email: contactForm.email,
-			discord_name: contactForm.discordname || 'Not provided',
-			message: contactForm.message,
-			to_name: 'Involvex',
-			// Include reCAPTCHA token for EmailJS validation
-			'g-recaptcha-response': formState.recaptchaToken || 'fallback_no_recaptcha',
-		}
-
-		// Send email using EmailJS
-		await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
-
-		formState.isSubmitting = false
-		formState.isSubmitted = true
-
-		const response = `
-✅ Thank you for your message, ${contactForm.name}!
-
-📧 Contact Details:
-   • Name: ${contactForm.name}
-   • Email: ${contactForm.email}
-   ${contactForm.discordname ? `   • Discord: ${contactForm.discordname}` : ''}
-
-📝 Message Summary:
-${contactForm.message.substring(0, 100)}${contactForm.message.length > 100 ? '...' : ''}
-
-🚀 Your message has been sent successfully!
-I'll get back to you within 24 hours.
-
-Type 'contact' again to send another message.
-`
-
-		console.log('Contact Form', response)
-
-		// Reset form after a delay
-		setTimeout(() => {
-			contactForm.name = ''
-			contactForm.email = ''
-			contactForm.message = ''
-			contactForm.discordname = ''
-			formState.isSubmitted = false
-		}, 3000)
-	} catch (error) {
-		formState.isSubmitting = false
-		console.error('Failed to send email:', error)
-		formState.errors.push(
-			'Failed to send message. Please try again or contact me directly via email.',
-		)
-	}
-}
 
 // Terminal history management
 const addToHistory = (command: string) => {
@@ -913,6 +694,11 @@ const showCommandOutput = (command: string): string => {
         <h3>About Involvex</h3>
         <p>👨‍💻 Full-stack developer passionate about creating innovative solutions</p>
         <p>🚀 Open-source contributor and tech enthusiast</p>
+		<p><SVG role="img" width="16" height="16" style="fill: white;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Bun</title><path d="M12 22.596c6.628 0 12-4.338 12-9.688 0-3.318-2.057-6.248-5.219-7.986-1.286-.715-2.297-1.357-3.139-1.89C14.058 2.025 13.08 1.404 12 1.404c-1.097 0-2.334.785-3.966 1.821a49.92 49.92 0 0 1-2.816 1.697C2.057 6.66 0 9.59 0 12.908c0 5.35 5.372 9.687 12 9.687v.001ZM10.599 4.715c.334-.759.503-1.58.498-2.409 0-.145.202-.187.23-.029.658 2.783-.902 4.162-2.057 4.624-.124.048-.199-.121-.103-.209a5.763 5.763 0 0 0 1.432-1.977Zm2.058-.102a5.82 5.82 0 0 0-.782-2.306v-.016c-.069-.123.086-.263.185-.172 1.962 2.111 1.307 4.067.556 5.051-.082.103-.23-.003-.189-.126a5.85 5.85 0 0 0 .23-2.431Zm1.776-.561a5.727 5.727 0 0 0-1.612-1.806v-.014c-.112-.085-.024-.274.114-.218 2.595 1.087 2.774 3.18 2.459 4.407a.116.116 0 0 1-.049.071.11.11 0 0 1-.153-.026.122.122 0 0 1-.022-.083 5.891 5.891 0 0 0-.737-2.331Zm-5.087.561c-.617.546-1.282.76-2.063 1-.117 0-.195-.078-.156-.181 1.752-.909 2.376-1.649 2.999-2.778 0 0 .155-.118.188.085 0 .304-.349 1.329-.968 1.874Zm4.945 11.237a2.957 2.957 0 0 1-.937 1.553c-.346.346-.8.565-1.286.62a2.178 2.178 0 0 1-1.327-.62 2.955 2.955 0 0 1-.925-1.553.244.244 0 0 1 .064-.198.234.234 0 0 1 .193-.069h3.965a.226.226 0 0 1 .19.07c.05.053.073.125.063.197Zm-5.458-2.176a1.862 1.862 0 0 1-2.384-.245 1.98 1.98 0 0 1-.233-2.447c.207-.319.503-.566.848-.713a1.84 1.84 0 0 1 1.092-.11c.366.075.703.261.967.531a1.98 1.98 0 0 1 .408 2.114 1.931 1.931 0 0 1-.698.869v.001Zm8.495.005a1.86 1.86 0 0 1-2.381-.253 1.964 1.964 0 0 1-.547-1.366c0-.384.11-.76.32-1.079.207-.319.503-.567.849-.713a1.844 1.844 0 0 1 1.093-.108c.367.076.704.262.968.534a1.98 1.98 0 0 1 .4 2.117 1.932 1.932 0 0 1-.702.868Z"/></SVG> Bun is better then every other package manager!⌨️ npm install -g bun ! (Last npm command you used) and run bun pm migrate</p>
+        <p>🎨 UI/UX designer with a focus on user experience</p>
+        <p>📚 Lifelong learner dedicated to continuous improvement</p>
+        <p><SVG role="img" width="16" height="16" style="fill: white;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GNOME Terminal</title><path d="M1.846 0A1.841 1.841 0 000 1.846v18.463c0 1.022.823 1.845 1.846 1.845h20.308A1.841 1.841 0 0024 20.31V1.846A1.841 1.841 0 0022.154 0H1.846zm0 .924h20.308c.512 0 .922.41.922.922v18.463c0 .511-.41.921-.922.921H1.846a.919.919 0 01-.922-.921V1.846c0-.512.41-.922.922-.922zm0 .922v18.463h20.308V1.846H1.846zm1.845 2.14l3.235 1.758v.836L3.69 8.477V7.385l2.243-1.207v-.033L3.69 5.076v-1.09zM7.846 9.23h3.693v.924H7.846V9.23zM0 21.736v.418C0 23.177.823 24 1.846 24h20.308A1.841 1.841 0 0024 22.154v-.418a2.334 2.334 0 01-1.846.918H1.846A2.334 2.334 0 010 21.736Z"/></SVG> Commandline First</p>
+        <p>👾 Agents > Humand Developer</p>
         <p>🌐 Building the future of web development</p>
         <p>💡 Always learning and exploring new technologies</p>
       </div>
@@ -957,24 +743,6 @@ const showCommandOutput = (command: string): string => {
 // Lifecycle
 onMounted(async () => {
 	fetchProjects()
-
-	// Initialize reCAPTCHA v2 widget
-	console.log('🚀 Initializing reCAPTCHA v2 on component mount...')
-	try {
-		recaptchaWidgetId.value = await initRecaptchaV2('recaptcha-widget', (response: string) => {
-			console.log('✅ reCAPTCHA v2 completed:', response.substring(0, 20) + '...')
-			recaptchaResponse.value = response
-			formState.recaptchaToken = response
-			formState.isRecaptchaValid = true
-			recaptchaError.value = ''
-		})
-		console.log('✅ reCAPTCHA v2 widget initialized successfully')
-		formState.isRecaptchaValid = true
-	} catch (error) {
-		console.error('❌ reCAPTCHA v2 initialization failed:', error)
-		recaptchaError.value = 'Failed to load reCAPTCHA. Form will work without validation.'
-		formState.isRecaptchaValid = true // Fallback to allow form submission
-	}
 })
 
 // Expose methods for parent components
@@ -1298,7 +1066,7 @@ export default {
 	flex-shrink: 0;
 }
 
-.contact-form {
+.contact-content {
 	background: rgba(0, 255, 0, 0.05);
 	border: 1px solid rgba(0, 255, 0, 0.2);
 	border-radius: 8px;
@@ -1306,173 +1074,62 @@ export default {
 	margin-bottom: 20px;
 }
 
-.form-group {
-	margin-bottom: 20px;
-}
-
-.form-group label {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	color: #00ff00;
-	margin-bottom: 8px;
-	font-weight: 600;
-}
-
-.char-count {
-	font-size: 12px;
-	font-weight: normal;
-	color: #666;
-}
-
-.char-count.warning {
-	color: #ffa500;
-}
-
-.char-count.error {
-	color: #ff6b6b;
-}
-
-.form-group input,
-.form-group textarea {
-	width: 100%;
-	padding: 10px;
-	background: rgba(0, 0, 0, 0.5);
-	border: 1px solid rgba(0, 255, 0, 0.3);
-	border-radius: 4px;
-	color: #ffffff;
-	font-family: inherit;
-	transition: all 0.3s ease;
-	box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-	outline: none;
-	border-color: #00ff00;
-	box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-}
-
-.form-group input:disabled,
-.form-group textarea:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-	color: #666;
-}
-
-.submit-btn {
-	background: linear-gradient(135deg, #00ff00, #00cc00);
-	color: #000000;
-	border: none;
-	padding: 12px 24px;
-	border-radius: 6px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	font-family: inherit;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-}
-
-.submit-btn:hover:not(:disabled) {
-	transform: translateY(-2px);
-	box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
-}
-
-.submit-btn:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-	transform: none;
-}
-
-.submit-btn:disabled:hover {
-	transform: none;
-	box-shadow: none;
-}
-
-/* Form Feedback Styles */
-.form-error,
-.form-loading,
-.form-success {
-	padding: 20px;
-	border-radius: 8px;
+.contact-info {
 	margin: 20px 0;
-	text-align: center;
 }
 
-.form-error {
-	background: rgba(255, 107, 107, 0.1);
-	border: 1px solid rgba(255, 107, 107, 0.3);
-	color: #ff6b6b;
-}
-
-.form-error ul {
-	list-style: none;
-	padding: 0;
-	margin: 10px 0 0 0;
-}
-
-.form-error li {
-	margin-bottom: 5px;
-}
-
-.form-loading {
-	background: rgba(0, 255, 0, 0.05);
-	border: 1px solid rgba(0, 255, 0, 0.2);
-	color: #00ff00;
-}
-
-.form-success {
-	background: rgba(0, 255, 0, 0.1);
-	border: 1px solid rgba(0, 255, 0, 0.4);
-	color: #00ff00;
-}
-
-.form-error h3,
-.form-loading h3,
-.form-success h3 {
-	margin-bottom: 15px;
-	font-size: 18px;
-}
-
-.form-error p,
-.form-loading p,
-.form-success p {
+.contact-info p {
+	color: #cccccc;
 	margin-bottom: 10px;
 	line-height: 1.6;
 }
 
-.form-error strong,
-.form-success strong {
-	color: #ffffff;
+.contact-info a {
+	color: #00ff00;
+	text-decoration: none;
 }
 
-/* Loading Spinner */
-.loading-spinner {
-	width: 40px;
-	height: 40px;
-	border: 3px solid rgba(0, 255, 0, 0.1);
-	border-top: 3px solid #00ff00;
-	border-radius: 50%;
-	animation: spin 1s linear infinite;
-	margin: 20px auto;
+.contact-info a:hover {
+	text-decoration: underline;
 }
 
-@keyframes spin {
-	0% {
-		transform: rotate(0deg);
-	}
+.contact-actions {
+	display: flex;
+	gap: 15px;
+	margin: 20px 0;
+	flex-wrap: wrap;
+}
 
-	100% {
-		transform: rotate(360deg);
-	}
+.contact-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: linear-gradient(135deg, #00ff00, #00cc00);
+	color: #000000;
+	text-decoration: none;
+	padding: 12px 24px;
+	border-radius: 6px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+}
+
+.contact-note {
+	margin-top: 20px;
+	padding: 15px;
+	background: rgba(0, 255, 0, 0.05);
+	border-radius: 4px;
+	border-left: 3px solid #00ff00;
+}
+
+.contact-note p {
+	color: #cccccc;
+	margin: 0;
+	line-height: 1.6;
 }
 
 .contact-links {
@@ -1525,50 +1182,6 @@ export default {
 
 .btn-icon {
 	margin-right: 8px;
-}
-
-/* Command Output Styles */
-.about-output,
-.projects-output,
-.skills-output,
-.contact-output,
-.sponsor-output {
-	color: #cccccc;
-}
-
-.about-output h3,
-.projects-output h3,
-.skills-output h3,
-.contact-output h3,
-.sponsor-output h3 {
-	color: #00ff00;
-	margin-bottom: 15px;
-}
-
-.about-output p,
-.projects-output p,
-.skills-output p,
-.contact-output p,
-.sponsor-output p {
-	margin-bottom: 10px;
-	line-height: 1.6;
-}
-
-.about-output a,
-.projects-output a,
-.skills-output a,
-.contact-output a,
-.sponsor-output a {
-	color: #00ff00;
-	text-decoration: none;
-}
-
-.about-output a:hover,
-.projects-output a:hover,
-.skills-output a:hover,
-.contact-output a:hover,
-.sponsor-output a:hover {
-	text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
 }
 
 /* Responsive Design */
@@ -1677,11 +1290,37 @@ export default {
 		text-align: center;
 	}
 
-	.recaptcha-container {
+	.turnstile-container {
 		padding: 12px;
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+	}
+
+	.turnstile-widget {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 80px;
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
+		border: 1px solid rgba(0, 255, 0, 0.2);
+	}
+
+	.turnstile-error {
+		color: #ff6b6b;
+		font-size: 12px;
+		text-align: center;
+		padding: 8px;
+		background: rgba(255, 107, 107, 0.1);
+		border-radius: 4px;
+		border: 1px solid rgba(255, 107, 107, 0.3);
+	}
+
+	.turnstile-loading {
+		flex-direction: column;
+		gap: 8px;
+		text-align: center;
 	}
 
 	.recaptcha-widget {
@@ -1708,6 +1347,8 @@ export default {
 		flex-direction: column;
 		gap: 8px;
 		text-align: center;
+		color: #00ff00;
+		padding: 12px;
 	}
 }
 

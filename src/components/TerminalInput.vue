@@ -143,7 +143,9 @@ const commands = {
 	},
 
 	clear: () => {
+		// Clear both command output and emit event to clear terminal history
 		commandOutput.value = ''
+		emit('command-submitted', 'clear')
 		return ''
 	},
 
@@ -257,6 +259,7 @@ export default {
 <style scoped>
 .terminal-input-section {
 	margin-top: 20px;
+	width: 85%;
 }
 
 .terminal-line {

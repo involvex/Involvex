@@ -304,7 +304,7 @@ const handleCommand = (command: string): void => {
 		const normalizedCommand = command.toLowerCase().trim()
 
 		// Check if command exists
-		if (commandHandlers[normalizedCommand]) {
+		if (normalizedCommand in commandHandlers) {
 			commandHandlers[normalizedCommand]()
 		} else {
 			console.log(`Unknown command: ${normalizedCommand}`)
@@ -332,9 +332,7 @@ const handleKeydown = (event: KeyboardEvent): void => {
 	const keyNum = parseInt(event.key)
 	if (keyNum >= 1 && keyNum <= NAVIGATION_SECTIONS.length) {
 		const section = NAVIGATION_SECTIONS[keyNum - 1]
-		if (section) {
-			showSection(section.id)
-		}
+		showSection(section.id)
 	}
 }
 
@@ -645,6 +643,7 @@ defineExpose({
 	min-height: calc(100vh - 60px);
 	display: flex;
 	flex-direction: column;
+	width: 85%;
 }
 
 /* Enhanced hover effects */
@@ -803,7 +802,7 @@ defineExpose({
 	}
 }
 .footer {
-	padding: 1rem;
+	padding: 0.8rem;
 	text-align: center;
 	font-size: 0.95rem;
 	font-style: normal;
@@ -822,5 +821,6 @@ defineExpose({
 	border-radius: 5px;
 	box-shadow: #046e34;
 	background-color: #0d1117;
+	max-height: 75px;
 }
 </style>
