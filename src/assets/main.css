@@ -4,26 +4,32 @@
 #app {
 	width: 100%;
 	min-height: 100vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 20px;
 	font-weight: normal;
+	position: relative;
+}
+
+#app::before {
+	content: '';
+	pointer-events: none;
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 a,
 .green {
 	text-decoration: none;
-	color: #00ff00;
+	color: var(--crt-green);
 	transition: all 0.3s ease;
 	padding: 3px;
-	text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+	text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
 }
 
 @media (hover: hover) {
 	a:hover {
-		background-color: rgba(0, 255, 0, 0.1);
-		text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+		background-color: var(--crt-green-mute);
+		text-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
 		transform: translateY(-1px);
 	}
 }
@@ -31,10 +37,10 @@ a,
 /* Terminal window animations */
 @keyframes scanline {
 	0% {
-		transform: translateX(-100%);
+		transform: translateY(-100%);
 	}
 	100% {
-		transform: translateX(100%);
+		transform: translateY(100%);
 	}
 }
 
@@ -59,22 +65,23 @@ a,
 	}
 }
 
-@keyframes glitch {
-	0%,
-	100% {
-		transform: translate(0);
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
 	}
-	20% {
-		transform: translate(-2px, 2px);
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
-	40% {
-		transform: translate(-2px, -2px);
+}
+
+@keyframes bootFade {
+	from {
+		opacity: 0;
 	}
-	60% {
-		transform: translate(2px, 2px);
-	}
-	80% {
-		transform: translate(2px, -2px);
+	to {
+		opacity: 1;
 	}
 }
 
@@ -88,24 +95,26 @@ a,
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #00ff00;
+	background: var(--crt-green);
 	border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: #00cc00;
+	background: var(--crt-green-dim);
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
 	#app {
-		padding: 10px;
+		padding: 0;
 	}
 }
 
-@media (min-width: 1024px) {
-	body {
-		display: flex;
-		place-items: center;
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
 	}
 }

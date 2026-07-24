@@ -33,8 +33,9 @@ export default {
 	justify-content: space-between;
 	padding: 12px 20px;
 	background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-	border-bottom: 1px solid #333;
+	border-bottom: 1px solid var(--crt-border, rgba(0, 255, 65, 0.25));
 	position: relative;
+	flex-shrink: 0;
 }
 
 .terminal-controls {
@@ -86,34 +87,39 @@ export default {
 	align-items: center;
 	gap: 8px;
 	font-weight: 600;
-	color: #00ff00;
-	text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+	color: var(--crt-green, #00ff41);
+	text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+	min-width: 0;
 }
 
 .terminal-icon {
 	font-size: 16px;
-	animation: pulse 2s ease-in-out infinite;
+	flex-shrink: 0;
 }
 
 @keyframes pulse {
 	0%,
 	100% {
-		transform: scale(1);
+		opacity: 1;
 	}
 	50% {
-		transform: scale(1.1);
+		opacity: 0.45;
 	}
 }
 
 .terminal-text {
-	font-family: 'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+	font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Menlo', monospace;
 	font-size: 14px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .terminal-status {
 	display: flex;
 	align-items: center;
 	gap: 6px;
+	flex-shrink: 0;
 }
 
 .status-indicator {
@@ -124,14 +130,14 @@ export default {
 }
 
 .status-indicator.online {
-	background: #00ff00;
-	box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+	background: var(--crt-green, #00ff41);
+	box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
 }
 
 .status-text {
 	font-size: 10px;
 	font-weight: 600;
-	color: #00ff00;
+	color: var(--crt-green, #00ff41);
 	letter-spacing: 1px;
 }
 
@@ -146,6 +152,12 @@ export default {
 
 	.status-text {
 		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.status-indicator {
+		animation: none;
 	}
 }
 </style>

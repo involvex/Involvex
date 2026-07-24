@@ -1,106 +1,98 @@
 # Involvex Terminal Portfolio
 
-An interactive terminal-style portfolio built with Vue 3, TypeScript, and Vite. Experience a unique command-line interface that showcases projects, skills, and contact information.
+An interactive terminal-style portfolio built with Vue 3, TypeScript, and Vite. A CRT-inspired command-line interface that showcases projects, skills, and contact information.
 
-## ✨ Features
+**Live:** [involvex.github.io/involvex](https://involvex.github.io/involvex/)
 
-- 🖥️ **Terminal Interface**: Authentic terminal experience with command-line interactions
-- 🎨 **Modern Design**: Sleek dark theme with green terminal aesthetics
-- 📱 **Responsive**: Works perfectly on desktop, tablet, and mobile devices
-- ⚡ **Interactive Commands**: Type commands to navigate through different sections
-- 🔗 **GitHub Integration**: Direct links to repositories and GitHub profile
-- 💝 **Sponsorship Support**: Easy access to support options
-- 📧 **Contact**: Direct email and GitHub contact options
+## Features
 
-## 🎮 Available Commands
+- Terminal interface with command-line navigation
+- Dark CRT theme with neon lime aesthetics
+- Responsive layout for desktop, tablet, and mobile
+- Tap-friendly command chips on mobile
+- Curated featured projects from GitHub
+- Sponsorship and contact options
 
-- `help` - Show all available commands
-- `about` - Learn about Involvex
-- `projects` - View featured projects from GitHub
-- `skills` - See technical skills and expertise
-- `contact` - Get in touch via email or GitHub
-- `sponsor` - Support options
-- `clear` - Clear terminal history
+## Available Commands
 
-## 🛠️ Tech Stack
+- `help` — Show all available commands
+- `about` — Learn about Involvex
+- `projects` — View featured projects from GitHub
+- `skills` — See technical skills and expertise
+- `contact` — Get in touch via email or socials
+- `sponsor` — Support options
+- `clear` — Clear terminal history
 
-### Frontend Development
+## About
 
-- **Ink** (85%) - React-based CLI framework
-- **React** (70%) - Modern JavaScript library
-- **TypeScript** (75%) - Type-safe JavaScript
-- **CSS/SCSS** (85%) - Modern styling
-- **HTML5** (90%) - Web markup
+Involvex is a Germany-based full-stack developer focused on open-source CLI/TUI tools, Bun-powered apps, and AI-assisted developer workflows. Best known for **youtube-music-cli** — a TypeScript/Ink TUI YouTube Music player — with additional work across Flutter/Expo, Gemini CLI extensions, and Cloudflare Workers. Available for hire.
 
-### Backend Development
+## Tech Stack
 
-- **Bun** (86%) - Modern JavaScript runtime and package manager
-- **Node.js** (85%) - Server-side JavaScript runtime
-- **Python** (75%) - General-purpose programming
-- **Tauri** (75%) - Desktop application framework
-- **Rust** (55%) - Systems programming language
+### Portfolio app
 
-### Mobile Development
+- **Vue 3** — Progressive JavaScript framework
+- **TypeScript** — Type-safe JavaScript
+- **Vite** — Fast build tool and dev server
+- **CSS3** — CRT styling and animations
 
-- **Flutter** (75%) - Cross-platform mobile development
-- **Ionic** (75%) - Hybrid mobile app development
-- **Expo** (75%) - React Native development platform
-- **React Native** (70%) - Mobile app development
+### Skills (self-declared)
 
-### Tools & Others
+| Category | Technologies                                       |
+| -------- | -------------------------------------------------- |
+| Frontend | Ink, Vue 3, React, TypeScript, CSS/SCSS, HTML5     |
+| Backend  | Bun, Node.js, Python, Tauri, Rust                  |
+| Mobile   | Flutter, Expo, Ionic, React Native                 |
+| Tools    | Git, Cloudflare Workers, PowerShell, Linux         |
+| Agentic  | Gemini CLI, Claude, Copilot, Cline, Opencode, Kilo |
 
-- **Git** (80%) - Version control system
-- **Worker** (75%) - Cloudflare Workers
-- **PowerShell** (65%) - Windows automation
-- **Linux** (75%) - Operating system
+## Featured Projects
 
-### Agentic Tools
+| Project                                                                            | Description                                                                                        |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [youtube-music-cli](https://github.com/involvex/youtube-music-cli)                 | TUI music player for YouTube Music (~380★) — [docs](https://involvex.github.io/youtube-music-cli/) |
+| [gemini-cli-prompt-library](https://github.com/involvex/gemini-cli-prompt-library) | Curated prompts for Gemini CLI (~60★)                                                              |
+| [gemini-cli-skill-creator](https://github.com/involvex/gemini-cli-skill-creator)   | Gemini CLI extension for project skills                                                            |
+| [gemini-cli-ssh-extension](https://github.com/involvex/gemini-cli-ssh-extension)   | SSH workflows for Gemini CLI                                                                       |
+| [create-wizard](https://github.com/involvex/create-wizard)                         | Interactive project scaffolding CLI                                                                |
+| [archhive-app](https://github.com/involvex/archhive-app)                           | Cross-platform media library (Rust)                                                                |
+| [nova-assistant](https://github.com/involvex/nova-assistant)                       | On-device AI assistant (Dart)                                                                      |
+| [pocketshell](https://github.com/involvex/pocketshell)                             | Flutter SSH client/server                                                                          |
 
-- **Opencode** (75%) - AI-powered development assistant
-- **Kilo** (75%) - AI development tool
-- **Copilot** (75%) - GitHub's AI coding assistant
-- **Claude** (75%) - Anthropic's AI assistant
-- **Gemini** (75%) - Google's AI model
-- **Cline** (75%) - AI development assistant
+More on [GitHub @involvex](https://github.com/involvex).
 
-### Core Technologies
+## Getting Started
 
-- **Vue 3** - Progressive JavaScript framework
-- **TypeScript** - Type-safe JavaScript
-- **Vite** - Fast build tool and dev server
-- **CSS3** - Modern styling with animations
-- **Monospace Fonts** - Authentic terminal feel
+```bash
+bun install
+bun run dev
+```
 
-## 🚀 Featured Projects
+```bash
+bun run build
+bun run preview
+```
 
-- **youtube-music-cli** - A powerful Terminal User Interface (TUI) music player for YouTube Music (300+ stars)
-- **gemini-cli-prompt-library** - A curated library of high-quality prompts for common development tasks (58+ stars)
-- And many more open-source projects available on GitHub
+## Philosophy
 
-## 📄 License
+- **Commandline First** — Embracing terminal-based workflows
+- **Agents > Human Developer** — Leveraging AI tools for productivity
+- **Open Source** — Active contributor to the developer community
+- **Continuous Learning** — Always exploring new technologies
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Inspired by terminal interfaces and retro computing
-- Built with modern web technologies
-- Designed for developer portfolios
-- Powered by Bun for optimal performance
-
-## 📞 Contact
+## Contact
 
 - **GitHub**: [@involvex](https://github.com/involvex)
+- **X**: [@Involvexdev](https://x.com/Involvexdev)
+- **Reddit**: [u/involvex](https://www.reddit.com/u/involvex)
 - **Email**: [involvex@proton.me](mailto:involvex@proton.me)
 - **Discord**: involvex
+- **Sponsors**: [GitHub Sponsors](https://github.com/sponsors/involvex) · [Buy Me a Coffee](https://buymeacoffee.com/involvex)
 
-## 💡 Philosophy
+## License
 
-- **Commandline First** - Embracing terminal-based workflows
-- **Agents > Human Developer** - Leveraging AI tools for enhanced productivity
-- **Open Source** - Active contributor to the developer community
-- **Continuous Learning** - Always exploring new technologies and approaches
+MIT — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-Made by [Involvex](https://github.com/involvex) with ❤️ and ☕
+Made by [Involvex](https://github.com/involvex)
